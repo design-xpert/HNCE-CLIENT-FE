@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Remove-Item -Recurse -Force \"d:\\\\Projects\\\\hcne-homepage\\\\app\\\\variation-a\")",
+      "Bash(Remove-Item -Recurse -Force \"d:\\\\Projects\\\\hcne-homepage\\\\app\\\\variation-b\")",
+      "Bash(Write-Output \"Done\")",
+      "PowerShell(gh auth status)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" init)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" add .)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" commit -m \"Initial commit: HCNE homepage \\(single landing page\\)\")",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" config user.email \"mukund.rgb@gmail.com\")",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" config user.name \"Mukund\")",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" branch -M main)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" remote add origin https://github.com/mukundrgb/hcne-homepage-ui.git)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" commit -m \"HCNE homepage - final single landing page\")",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" push --force origin main 2>&1)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" add app/page.tsx)",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" commit -m \"Update homepage with linter fixes\")",
+      "PowerShell(git -C \"d:\\\\Projects\\\\hcne-homepage\" push origin main 2>&1)"
+    ]
+  }
+}
