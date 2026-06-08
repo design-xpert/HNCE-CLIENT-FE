@@ -39,8 +39,8 @@ The whole thing is **front-end only right now.** Every form, table, and setting 
 ## 3. Getting started
 
 ```bash
-# Install (project uses pnpm on Vercel; npm works locally — a package-lock.json is committed)
-npm install          # or: pnpm install
+# Install
+npm install
 
 npm run dev          # http://localhost:3000
 npm run build        # production build (Turbopack)
