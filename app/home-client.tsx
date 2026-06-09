@@ -23,7 +23,7 @@ import {
   SectionBadge,
 } from "@/components/brand-elements";
 import { ProspectusDialog } from "@/components/prospectus-dialog";
-import ReCAPTCHA from "@/components/recaptcha";
+import ReCAPTCHA, { ReCAPTCHARef } from "@/components/recaptcha";
 import { submitEnquiryAction } from "@/app/actions";
 import {
   Accordion,
@@ -154,6 +154,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const recaptchaRef = useRef<ReCAPTCHARef>(null);
 
   // Enquiry Form State
   const [formData, setFormData] = useState({
@@ -178,17 +179,33 @@ export default function HomeClient({ programs }: HomeClientProps) {
       return;
     }
 
-    if (!recaptchaToken) {
-      setSubmitError("Please complete the reCAPTCHA verification.");
-      return;
-    }
+    const version = (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase();
+    let token = recaptchaToken;
 
-    setIsSubmitting(true);
+    if (version === "v3") {
+      setIsSubmitting(true);
+      try {
+        token = await recaptchaRef.current?.execute() || null;
+      } catch (err) {
+        console.error("reCAPTCHA execution error:", err);
+      }
+      if (!token) {
+        setSubmitError("reCAPTCHA validation failed. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+    } else {
+      if (!token) {
+        setSubmitError("Please complete the reCAPTCHA verification.");
+        return;
+      }
+      setIsSubmitting(true);
+    }
 
     try {
       const result = await submitEnquiryAction({
         ...formData,
-        recaptchaToken,
+        recaptchaToken: token,
       });
 
       if (!result.success) {
@@ -1284,19 +1301,20 @@ export default function HomeClient({ programs }: HomeClientProps) {
 
                   <div className="flex justify-center py-2">
                     <ReCAPTCHA
+                      ref={recaptchaRef}
                       onChange={(token) => setRecaptchaToken(token)}
                     />
                   </div>
 
                   {submitError && (
-                    <p className="text-sm text-destructive text-center">
-                      {submitError}
-                    </p>
+                     <p className="text-sm text-destructive text-center">
+                       {submitError}
+                     </p>
                   )}
 
                   <Button
                     type="submit"
-                    disabled={isSubmitting || !recaptchaToken}
+                    disabled={isSubmitting || ((process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase() !== "v3" && !recaptchaToken)}
                     className="w-full gap-2 bg-terracotta-900 hover:bg-terracotta-700 text-white disabled:opacity-50"
                     size="lg"
                   >

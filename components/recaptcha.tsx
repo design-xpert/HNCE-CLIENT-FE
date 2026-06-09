@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+
+export interface ReCAPTCHARef {
+  execute: () => Promise<string | null>;
+}
 
 interface ReCAPTCHAProps {
   onChange: (token: string | null) => void;
 }
 
-export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
+const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
 
@@ -18,33 +22,37 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
     onChangeRef.current = onChange;
   }, [onChange]);
 
+  // Expose execute method to parent component
+  useImperativeHandle(ref, () => ({
+    execute: async (): Promise<string | null> => {
+      if (version === "v3") {
+        if (window.grecaptcha && window.grecaptcha.execute) {
+          try {
+            return await window.grecaptcha.execute(sitekey, { action: "homepage" });
+          } catch (err) {
+            console.error("Error executing reCAPTCHA v3:", err);
+            return null;
+          }
+        }
+        return null;
+      }
+      return null;
+    }
+  }));
+
   useEffect(() => {
     let active = true;
     let widgetId: number | null = null;
-    let intervalId: NodeJS.Timeout | null = null;
 
     const renderRecaptcha = () => {
       if (!active) return;
 
       try {
         if (version === "v3") {
-          const executeV3 = () => {
-            if (window.grecaptcha && window.grecaptcha.execute) {
-              window.grecaptcha.execute(sitekey, { action: "homepage" })
-                .then((token) => {
-                  if (active) onChangeRef.current(token);
-                })
-                .catch((err) => {
-                  console.error("Error executing reCAPTCHA v3:", err);
-                });
-            }
-          };
-
-          window.grecaptcha.ready(() => {
-            executeV3();
-            // Refresh token every 90 seconds to prevent expiration
-            intervalId = setInterval(executeV3, 90000);
-          });
+          // v3 ready state
+          if (window.grecaptcha) {
+            window.grecaptcha.ready(() => {});
+          }
         } else {
           // v2 Checkbox flow
           if (!containerRef.current) return;
@@ -112,9 +120,6 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
       if (script) {
         script.removeEventListener("load", handleScriptLoad);
       }
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
       if (widgetId !== null && window.grecaptcha && window.grecaptcha.reset) {
         try {
           window.grecaptcha.reset(widgetId);
@@ -158,7 +163,11 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
       style={{ minHeight: "78px" }} 
     />
   );
-}
+});
+
+ReCAPTCHA.displayName = "ReCAPTCHA";
+
+export default ReCAPTCHA;
 
 // Typing declarations for grecaptcha
 declare global {
