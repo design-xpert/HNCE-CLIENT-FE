@@ -3,13 +3,14 @@
 import { useEffect, useRef } from "react";
 
 interface ReCAPTCHAProps {
-  sitekey: string;
   onChange: (token: string | null) => void;
 }
 
-export default function ReCAPTCHA({ sitekey, onChange }: ReCAPTCHAProps) {
+export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
+
+  const sitekey = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI").trim();
 
   // Keep callback updated without re-running the widget render effect
   useEffect(() => {
