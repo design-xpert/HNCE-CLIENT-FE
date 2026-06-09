@@ -22,7 +22,7 @@ export async function submitEnquiryAction(formDataPayload: {
     }
 
     // 1. Verify reCAPTCHA token with Google API
-    const secretKey = (process.env.RECAPTCHA_SECRET_KEY || "6LdbSRUtAAAAAM38ak7kuDD2tNPjswg37Zm_W80e").trim();
+    const secretKey = (process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnCF3ssK50FDEtCm5mRk").trim();
     const verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
 
     const verifyResponse = await fetch(verificationUrl, {
