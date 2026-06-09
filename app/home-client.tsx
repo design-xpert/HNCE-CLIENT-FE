@@ -180,9 +180,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
     }
 
     const version = (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase();
+    const isV3OrEnterprise = version === "v3" || version === "enterprise";
     let token = recaptchaToken;
 
-    if (version === "v3") {
+    if (isV3OrEnterprise) {
       setIsSubmitting(true);
       try {
         token = await recaptchaRef.current?.execute() || null;
@@ -212,6 +213,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
         throw new Error(result.error || "Failed to submit. Please try again.");
       }
 
+      console.log("Form submission successful! Response:", result);
+      console.log("Redirecting to thank-you page...");
       router.push(`/thank-you?type=lead&name=${encodeURIComponent(formData.name)}`);
     } catch (err: any) {
       console.error("Enquiry submission error:", err);
@@ -252,9 +255,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
           {heroSlides.map((slide, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
+                }`}
             >
               <img
                 src={slide.image}
@@ -284,11 +286,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
                 {heroSlides.map((slide, index) => (
                   <div
                     key={index}
-                    className={`transition-all duration-700 ${
-                      index === currentSlide
+                    className={`transition-all duration-700 ${index === currentSlide
                         ? "translate-y-0 opacity-100"
                         : "pointer-events-none absolute translate-y-8 opacity-0"
-                    }`}
+                      }`}
                   >
                     {index === currentSlide && (
                       <>
@@ -369,11 +370,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`h-2 rounded-full transition-all ${
-                    index === currentSlide
+                  className={`h-2 rounded-full transition-all ${index === currentSlide
                       ? "w-8 bg-primary"
                       : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
@@ -846,11 +846,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
                   <button
                     key={index}
                     onClick={() => setCurrentTestimonial(index)}
-                    className={`h-2 rounded-full transition-all ${
-                      index === currentTestimonial
+                    className={`h-2 rounded-full transition-all ${index === currentTestimonial
                         ? "w-6 bg-primary"
                         : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
@@ -1005,13 +1004,12 @@ export default function HomeClient({ programs }: HomeClientProps) {
                   <Link href={`/news/${news.slug}`} className="block">
                     <div className="aspect-video overflow-hidden bg-muted">
                       <img
-                        src={`https://images.unsplash.com/photo-${
-                          i === 0
+                        src={`https://images.unsplash.com/photo-${i === 0
                             ? "1576091160399-112ba8d25d1d"
                             : i === 1
                               ? "1551190822-a9333d879b1f"
                               : "1579684385127-1ef15d508118"
-                        }?w=600&q=80`}
+                          }?w=600&q=80`}
                         alt={news.title}
                         className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
@@ -1307,14 +1305,18 @@ export default function HomeClient({ programs }: HomeClientProps) {
                   </div>
 
                   {submitError && (
-                     <p className="text-sm text-destructive text-center">
-                       {submitError}
-                     </p>
+                    <p className="text-sm text-destructive text-center">
+                      {submitError}
+                    </p>
                   )}
 
                   <Button
                     type="submit"
-                    disabled={isSubmitting || ((process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase() !== "v3" && !recaptchaToken)}
+                    disabled={isSubmitting || (
+                      (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase() !== "v3" &&
+                      (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase() !== "enterprise" &&
+                      !recaptchaToken
+                    )}
                     className="w-full gap-2 bg-terracotta-900 hover:bg-terracotta-700 text-white disabled:opacity-50"
                     size="lg"
                   >

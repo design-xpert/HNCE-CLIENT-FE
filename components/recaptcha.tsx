@@ -14,8 +14,12 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
 
-  const sitekey = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI").trim();
+  const sitekey = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "").trim();
   const version = (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase();
+
+  useEffect(() => {
+    console.log("reCAPTCHA initialized in browser:", { version, sitekey });
+  }, [version, sitekey]);
 
   // Keep callback updated without re-running the widget render effect
   useEffect(() => {
@@ -24,19 +28,51 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
 
   // Expose execute method to parent component
   useImperativeHandle(ref, () => ({
-    execute: async (): Promise<string | null> => {
-      if (version === "v3") {
-        if (window.grecaptcha && window.grecaptcha.execute) {
-          try {
-            return await window.grecaptcha.execute(sitekey, { action: "homepage" });
-          } catch (err) {
-            console.error("Error executing reCAPTCHA v3:", err);
-            return null;
+    execute: (): Promise<string | null> => {
+      return new Promise((resolve) => {
+        // Set a 3-second safety timeout to prevent hanging
+        const timeoutId = setTimeout(() => {
+          console.warn("reCAPTCHA execute timed out after 3 seconds.");
+          resolve(null);
+        }, 3000);
+
+        const resolveWithTimeout = (token: string | null) => {
+          clearTimeout(timeoutId);
+          resolve(token);
+        };
+
+        if (version === "enterprise") {
+          if (window.grecaptcha && window.grecaptcha.enterprise) {
+            window.grecaptcha.enterprise.ready(async () => {
+              try {
+                const token = await window.grecaptcha.enterprise.execute(sitekey, { action: "submit" });
+                resolveWithTimeout(token);
+              } catch (err) {
+                console.error("Error executing reCAPTCHA Enterprise:", err);
+                resolveWithTimeout(null);
+              }
+            });
+          } else {
+            resolveWithTimeout(null);
           }
+        } else if (version === "v3") {
+          if (window.grecaptcha) {
+            window.grecaptcha.ready(async () => {
+              try {
+                const token = await window.grecaptcha.execute(sitekey, { action: "homepage" });
+                resolveWithTimeout(token);
+              } catch (err) {
+                console.error("Error executing reCAPTCHA v3:", err);
+                resolveWithTimeout(null);
+              }
+            });
+          } else {
+            resolveWithTimeout(null);
+          }
+        } else {
+          resolveWithTimeout(null);
         }
-        return null;
-      }
-      return null;
+      });
     }
   }));
 
@@ -48,7 +84,11 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
       if (!active) return;
 
       try {
-        if (version === "v3") {
+        if (version === "enterprise") {
+          if (window.grecaptcha && window.grecaptcha.enterprise) {
+            window.grecaptcha.enterprise.ready(() => {});
+          }
+        } else if (version === "v3") {
           // v3 ready state
           if (window.grecaptcha) {
             window.grecaptcha.ready(() => {});
@@ -83,18 +123,31 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
     let script = document.getElementById(scriptId) as HTMLScriptElement;
 
     const handleScriptLoad = () => {
-      if (window.grecaptcha) {
-        window.grecaptcha.ready(renderRecaptcha);
+      if (version === "enterprise") {
+        if (window.grecaptcha && window.grecaptcha.enterprise) {
+          window.grecaptcha.enterprise.ready(renderRecaptcha);
+        }
+      } else {
+        if (window.grecaptcha && window.grecaptcha.ready) {
+          window.grecaptcha.ready(renderRecaptcha);
+        }
       }
     };
 
     const scriptUrl =
-      version === "v3"
+      version === "enterprise"
+        ? `https://www.google.com/recaptcha/enterprise.js?render=${sitekey}`
+        : version === "v3"
         ? `https://www.google.com/recaptcha/api.js?render=${sitekey}`
         : "https://www.google.com/recaptcha/api.js?render=explicit";
 
-    // If script already exists but with a different render parameter, we must recreate it
-    if (script && script.src !== scriptUrl) {
+    // Defensive check to ensure the required global objects are initialized
+    const isEnterpriseInitialized = version === "enterprise" && typeof window !== "undefined" && window.grecaptcha && !!window.grecaptcha.enterprise;
+    const isStandardInitialized = version !== "enterprise" && typeof window !== "undefined" && window.grecaptcha && !!window.grecaptcha.ready;
+    const isInitialized = version === "enterprise" ? isEnterpriseInitialized : isStandardInitialized;
+
+    // If script already exists but with a different render parameter or is not initialized, recreate it
+    if (script && (script.src !== scriptUrl || !isInitialized)) {
       script.remove();
       script = null as any;
     }
@@ -108,7 +161,9 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
       script.onload = handleScriptLoad;
       document.body.appendChild(script);
     } else {
-      if (window.grecaptcha) {
+      if (version === "enterprise" && window.grecaptcha && window.grecaptcha.enterprise) {
+        window.grecaptcha.enterprise.ready(renderRecaptcha);
+      } else if (version !== "enterprise" && window.grecaptcha && window.grecaptcha.ready) {
         window.grecaptcha.ready(renderRecaptcha);
       } else {
         script.addEventListener("load", handleScriptLoad);
@@ -130,7 +185,7 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
     };
   }, [sitekey, version]);
 
-  if (version === "v3") {
+  if (version === "v3" || version === "enterprise") {
     return (
       <div className="text-center text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed py-2">
         This site is protected by reCAPTCHA and the Google{" "}
@@ -185,6 +240,10 @@ declare global {
       ) => number;
       execute: (sitekey: string, options: { action: string }) => Promise<string>;
       reset: (widgetId: number) => void;
+      enterprise: {
+        ready: (callback: () => void) => void;
+        execute: (sitekey: string, options: { action: string }) => Promise<string>;
+      };
     };
   }
 }

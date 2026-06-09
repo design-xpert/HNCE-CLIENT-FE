@@ -23,52 +23,121 @@ export async function submitEnquiryAction(formDataPayload: {
 
     // 1. Verify reCAPTCHA token with Google API
     const secretKey = (process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnCF3ssK50FDEtCm5mRk").trim();
-    const verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
+    const version = (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase();
+    
+    let isSuccess = false;
+    let errorMsg = "reCAPTCHA validation failed. Please try again.";
+    let verificationResult: any = null;
 
-    console.log("reCAPTCHA Verification Request Details:", {
-      secretKeyLength: secretKey.length,
-      secretKeyPrefix: secretKey.substring(0, 10),
-      tokenLength: recaptchaToken.length,
-      tokenPrefix: recaptchaToken.substring(0, 20),
-    });
+    if (version === "enterprise") {
+      const projectId = process.env.RECAPTCHA_ENTERPRISE_PROJECT_ID || "hcne-1780993956313";
+      const siteKey = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "").trim();
+      const enterpriseUrl = `https://recaptchaenterprise.googleapis.com/v1/projects/${projectId}/assessments?key=${secretKey}`;
 
-    const verifyResponse = await fetch(verificationUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        secret: secretKey,
-        response: recaptchaToken,
-      }).toString(),
-    });
+      console.log("reCAPTCHA Enterprise Assessment Request Details:", {
+        projectId,
+        siteKey,
+        secretKeyLength: secretKey.length,
+        secretKeyPrefix: secretKey.substring(0, 10),
+        tokenLength: recaptchaToken.length,
+        tokenPrefix: recaptchaToken.substring(0, 20),
+      });
 
-    if (!verifyResponse.ok) {
-      return { success: false, error: "Failed to connect to reCAPTCHA verification service." };
+      console.log("Sending assessment request to Google Enterprise API...");
+      const verifyResponse = await fetch(enterpriseUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event: {
+            token: recaptchaToken,
+            expectedAction: "submit",
+            siteKey: siteKey,
+          },
+        }),
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!verifyResponse.ok) {
+        const errorText = await verifyResponse.text();
+        console.error("reCAPTCHA Enterprise Verification Error:", errorText);
+        return { success: false, error: "Failed to connect to reCAPTCHA Enterprise verification service." };
+      }
+
+      verificationResult = await verifyResponse.json();
+
+      console.log("reCAPTCHA Enterprise Verification Result:", {
+        name: verificationResult.name,
+        valid: verificationResult.tokenProperties?.valid,
+        score: verificationResult.riskAnalysis?.score,
+        invalidReason: verificationResult.tokenProperties?.invalidReason,
+      });
+
+      const isValidToken = verificationResult.tokenProperties?.valid === true;
+      const score = verificationResult.riskAnalysis?.score;
+
+      if (!isValidToken) {
+        isSuccess = false;
+        errorMsg = `reCAPTCHA validation failed: token is invalid (${verificationResult.tokenProperties?.invalidReason || "unknown reason"}).`;
+      } else if (score !== undefined && score < 0.5) {
+        isSuccess = false;
+        errorMsg = `reCAPTCHA validation failed: verification score is too low (${score}).`;
+      } else {
+        isSuccess = true;
+      }
+    } else {
+      // Standard reCAPTCHA siteverify
+      const verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
+
+      console.log("reCAPTCHA Verification Request Details:", {
+        secretKeyLength: secretKey.length,
+        secretKeyPrefix: secretKey.substring(0, 10),
+        tokenLength: recaptchaToken.length,
+        tokenPrefix: recaptchaToken.substring(0, 20),
+      });
+
+      console.log("Sending verification request to Google siteverify API...");
+      const verifyResponse = await fetch(verificationUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          secret: secretKey,
+          response: recaptchaToken,
+        }).toString(),
+        signal: AbortSignal.timeout(5000),
+      });
+
+      if (!verifyResponse.ok) {
+        return { success: false, error: "Failed to connect to reCAPTCHA verification service." };
+      }
+
+      verificationResult = await verifyResponse.json();
+
+      console.log("reCAPTCHA Verification Attempt Response:", {
+        success: verificationResult.success,
+        errorCodes: verificationResult["error-codes"],
+        fullResponse: verificationResult,
+      });
+
+      if (!verificationResult.success) {
+        isSuccess = false;
+        errorMsg = `reCAPTCHA validation failed: ${verificationResult["error-codes"]?.join(", ") || "invalid token"}. Please try again.`;
+      } else if (verificationResult.score !== undefined && verificationResult.score < 0.5) {
+        isSuccess = false;
+        errorMsg = "reCAPTCHA validation failed: verification score is too low. Please try again.";
+      } else {
+        isSuccess = true;
+      }
     }
 
-    const verificationResult = await verifyResponse.json();
-
-    console.log("reCAPTCHA Verification Attempt Response:", {
-      success: verificationResult.success,
-      errorCodes: verificationResult["error-codes"],
-      fullResponse: verificationResult,
-    });
-
-    if (!verificationResult.success) {
+    if (!isSuccess) {
       return { 
         success: false, 
-        error: `reCAPTCHA validation failed: ${verificationResult["error-codes"]?.join(", ") || "invalid token"}. Please try again.`,
+        error: errorMsg,
         details: verificationResult 
-      };
-    }
-
-    // For reCAPTCHA v3, verify the score if present
-    if (verificationResult.score !== undefined && verificationResult.score < 0.5) {
-      return {
-        success: false,
-        error: "reCAPTCHA validation failed: verification score is too low. Please try again.",
-        details: verificationResult
       };
     }
 
@@ -85,12 +154,14 @@ export async function submitEnquiryAction(formDataPayload: {
       source: "homepage",
     };
 
+    console.log("Submitting lead to backend database API:", `${backendUrl}/api/leads`);
     const leadResponse = await fetch(`${backendUrl}/api/leads`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(leadData),
+      signal: AbortSignal.timeout(5000),
     });
 
     if (!leadResponse.ok) {
