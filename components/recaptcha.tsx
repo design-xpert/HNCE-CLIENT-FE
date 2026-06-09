@@ -11,6 +11,7 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
   const onChangeRef = useRef(onChange);
 
   const sitekey = (process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI").trim();
+  const version = (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase();
 
   // Keep callback updated without re-running the widget render effect
   useEffect(() => {
@@ -20,26 +21,49 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
   useEffect(() => {
     let active = true;
     let widgetId: number | null = null;
+    let intervalId: NodeJS.Timeout | null = null;
 
     const renderRecaptcha = () => {
-      if (!active || !containerRef.current) return;
+      if (!active) return;
 
       try {
-        if (window.grecaptcha && window.grecaptcha.render) {
-          // Check if container already has children to prevent double rendering
-          if (containerRef.current.childNodes.length === 0) {
-            widgetId = window.grecaptcha.render(containerRef.current, {
-              sitekey: sitekey,
-              callback: (token: string) => {
-                if (active) onChangeRef.current(token);
-              },
-              "expired-callback": () => {
-                if (active) onChangeRef.current(null);
-              },
-              "error-callback": () => {
-                if (active) onChangeRef.current(null);
-              },
-            });
+        if (version === "v3") {
+          const executeV3 = () => {
+            if (window.grecaptcha && window.grecaptcha.execute) {
+              window.grecaptcha.execute(sitekey, { action: "homepage" })
+                .then((token) => {
+                  if (active) onChangeRef.current(token);
+                })
+                .catch((err) => {
+                  console.error("Error executing reCAPTCHA v3:", err);
+                });
+            }
+          };
+
+          window.grecaptcha.ready(() => {
+            executeV3();
+            // Refresh token every 90 seconds to prevent expiration
+            intervalId = setInterval(executeV3, 90000);
+          });
+        } else {
+          // v2 Checkbox flow
+          if (!containerRef.current) return;
+          if (window.grecaptcha && window.grecaptcha.render) {
+            // Check if container already has children to prevent double rendering
+            if (containerRef.current.childNodes.length === 0) {
+              widgetId = window.grecaptcha.render(containerRef.current, {
+                sitekey: sitekey,
+                callback: (token: string) => {
+                  if (active) onChangeRef.current(token);
+                },
+                "expired-callback": () => {
+                  if (active) onChangeRef.current(null);
+                },
+                "error-callback": () => {
+                  if (active) onChangeRef.current(null);
+                },
+              });
+            }
           }
         }
       } catch (err) {
@@ -56,10 +80,21 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
       }
     };
 
+    const scriptUrl =
+      version === "v3"
+        ? `https://www.google.com/recaptcha/api.js?render=${sitekey}`
+        : "https://www.google.com/recaptcha/api.js?render=explicit";
+
+    // If script already exists but with a different render parameter, we must recreate it
+    if (script && script.src !== scriptUrl) {
+      script.remove();
+      script = null as any;
+    }
+
     if (!script) {
       script = document.createElement("script");
       script.id = scriptId;
-      script.src = "https://www.google.com/recaptcha/api.js?render=explicit";
+      script.src = scriptUrl;
       script.async = true;
       script.defer = true;
       script.onload = handleScriptLoad;
@@ -77,6 +112,9 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
       if (script) {
         script.removeEventListener("load", handleScriptLoad);
       }
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
       if (widgetId !== null && window.grecaptcha && window.grecaptcha.reset) {
         try {
           window.grecaptcha.reset(widgetId);
@@ -85,7 +123,33 @@ export default function ReCAPTCHA({ onChange }: ReCAPTCHAProps) {
         }
       }
     };
-  }, [sitekey]); // Only re-run if the sitekey itself changes!
+  }, [sitekey, version]);
+
+  if (version === "v3") {
+    return (
+      <div className="text-center text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed py-2">
+        This site is protected by reCAPTCHA and the Google{" "}
+        <a
+          href="https://policies.google.com/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-primary transition-colors"
+        >
+          Privacy Policy
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://policies.google.com/terms"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-primary transition-colors"
+        >
+          Terms of Service
+        </a>{" "}
+        apply.
+      </div>
+    );
+  }
 
   return (
     <div 
@@ -110,6 +174,7 @@ declare global {
           "error-callback"?: () => void;
         }
       ) => number;
+      execute: (sitekey: string, options: { action: string }) => Promise<string>;
       reset: (widgetId: number) => void;
     };
   }

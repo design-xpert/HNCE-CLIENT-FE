@@ -25,6 +25,13 @@ export async function submitEnquiryAction(formDataPayload: {
     const secretKey = (process.env.RECAPTCHA_SECRET_KEY || "6LeIxAcTAAAAAGG-vFI1TnCF3ssK50FDEtCm5mRk").trim();
     const verificationUrl = "https://www.google.com/recaptcha/api/siteverify";
 
+    console.log("reCAPTCHA Verification Request Details:", {
+      secretKeyLength: secretKey.length,
+      secretKeyPrefix: secretKey.substring(0, 10),
+      tokenLength: recaptchaToken.length,
+      tokenPrefix: recaptchaToken.substring(0, 20),
+    });
+
     const verifyResponse = await fetch(verificationUrl, {
       method: "POST",
       headers: {
@@ -42,17 +49,26 @@ export async function submitEnquiryAction(formDataPayload: {
 
     const verificationResult = await verifyResponse.json();
 
-    console.log("reCAPTCHA Verification Attempt:", {
-      secretKeyUsed: secretKey.substring(0, 10) + "...",
+    console.log("reCAPTCHA Verification Attempt Response:", {
       success: verificationResult.success,
       errorCodes: verificationResult["error-codes"],
+      fullResponse: verificationResult,
     });
 
     if (!verificationResult.success) {
       return { 
         success: false, 
-        error: `reCAPTCHA validation failed: ${verificationResult["error-codes"]?.join(", ") || "invalid token"}. Please solve the captcha again.`,
+        error: `reCAPTCHA validation failed: ${verificationResult["error-codes"]?.join(", ") || "invalid token"}. Please try again.`,
         details: verificationResult 
+      };
+    }
+
+    // For reCAPTCHA v3, verify the score if present
+    if (verificationResult.score !== undefined && verificationResult.score < 0.5) {
+      return {
+        success: false,
+        error: "reCAPTCHA validation failed: verification score is too low. Please try again.",
+        details: verificationResult
       };
     }
 
