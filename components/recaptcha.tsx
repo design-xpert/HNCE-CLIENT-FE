@@ -58,7 +58,7 @@ export default function ReCAPTCHA({ sitekey, onChange }: ReCAPTCHAProps) {
     if (!script) {
       script = document.createElement("script");
       script.id = scriptId;
-      script.src = `https://www.google.com/recaptcha/api.js?render=${sitekey}`;
+      script.src = "https://www.google.com/recaptcha/api.js?render=explicit";
       script.async = true;
       script.defer = true;
       script.onload = handleScriptLoad;
