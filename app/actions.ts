@@ -42,10 +42,16 @@ export async function submitEnquiryAction(formDataPayload: {
 
     const verificationResult = await verifyResponse.json();
 
+    console.log("reCAPTCHA Verification Attempt:", {
+      secretKeyUsed: secretKey.substring(0, 10) + "...",
+      success: verificationResult.success,
+      errorCodes: verificationResult["error-codes"],
+    });
+
     if (!verificationResult.success) {
       return { 
         success: false, 
-        error: "reCAPTCHA validation failed. Please solve the captcha again.",
+        error: `reCAPTCHA validation failed: ${verificationResult["error-codes"]?.join(", ") || "invalid token"}. Please solve the captcha again.`,
         details: verificationResult 
       };
     }
