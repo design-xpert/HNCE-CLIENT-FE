@@ -326,7 +326,7 @@ function PaymentContent() {
                       <div className="space-y-3">
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Registration Fee</span>
-                          <span>₹{registrationFee.toLocaleString()}</span>
+                          <span>₹{tokenAmount.toLocaleString()}</span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Processing Fee</span>

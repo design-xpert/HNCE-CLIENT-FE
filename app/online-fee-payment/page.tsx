@@ -587,7 +587,7 @@ export default function OnlineFeePaymentPage() {
                       <Checkbox
                         id="terms"
                         checked={agreeTerms}
-                        onCheckedChange={setAgreeTerms}
+                        onCheckedChange={(checked) => setAgreeTerms(checked === true)}
                       />
                       <label htmlFor="terms" className="text-sm cursor-pointer">
                         I agree to the payment policy, refund policy, and terms
