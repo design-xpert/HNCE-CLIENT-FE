@@ -212,11 +212,16 @@ const ReCAPTCHA = forwardRef<ReCAPTCHARef, ReCAPTCHAProps>(({ onChange }, ref) =
   }
 
   return (
-    <div 
-      ref={containerRef} 
-      className="g-recaptcha flex justify-center items-center" 
-      style={{ minHeight: "78px" }} 
-    />
+    <div className="flex flex-col items-center justify-center">
+      <div 
+        ref={containerRef} 
+        className="g-recaptcha flex justify-center items-center" 
+        style={{ minHeight: "78px" }} 
+      />
+      <div className="text-[8px] text-muted-foreground opacity-40 mt-1 font-mono">
+        reCAPTCHA Key: {sitekey}
+      </div>
+    </div>
   );
 });
 
