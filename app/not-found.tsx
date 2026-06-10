@@ -36,7 +36,7 @@ export default function NotFoundPage() {
                 </Link>
               </li>
               <li>
-                <Link href="/programs" className="text-primary hover:underline">
+                <Link href="/en/programs" className="text-primary hover:underline">
                   → Programs
                 </Link>
               </li>

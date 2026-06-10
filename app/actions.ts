@@ -9,9 +9,10 @@ export async function submitEnquiryAction(formDataPayload: {
   city: string;
   message: string;
   recaptchaToken: string;
+  source?: string;
 }) {
   try {
-    const { name, email, phone, program, location, city, message, recaptchaToken } = formDataPayload;
+    const { name, email, phone, program, location, city, message, recaptchaToken, source } = formDataPayload;
 
     if (!name || !email || !phone) {
       return { success: false, error: "Name, email, and phone number are required." };
@@ -22,9 +23,14 @@ export async function submitEnquiryAction(formDataPayload: {
     }
 
     // 1. Verify reCAPTCHA token with Google API
-    const secretKey = (process.env.NEXT_PUBLIC_RECAPTCHA_SECRET_KEY || "").trim();
+    const secretKey = (process.env.RECAPTCHA_SECRET_KEY || "").trim();
     const version = (process.env.NEXT_PUBLIC_RECAPTCHA_VERSION || "v2").trim().toLowerCase();
-    
+
+    if (!secretKey) {
+      console.error("RECAPTCHA_SECRET_KEY is not set in environment variables.");
+      return { success: false, error: "Server configuration error. Please contact support." };
+    }
+
     let isSuccess = false;
     let errorMsg = "reCAPTCHA validation failed. Please try again.";
     let verificationResult: any = null;
@@ -76,10 +82,24 @@ export async function submitEnquiryAction(formDataPayload: {
 
       const isValidToken = verificationResult.tokenProperties?.valid === true;
       const score = verificationResult.riskAnalysis?.score;
+      const hostname = verificationResult.tokenProperties?.hostname;
+
+      const isDomainAllowed = (host: string) => {
+        const cleanHost = host.trim().toLowerCase();
+        return (
+          cleanHost === "localhost" ||
+          cleanHost === "127.0.0.1" ||
+          cleanHost === "testkey.google.com" || // Google's official test keys
+          cleanHost.endsWith("kvtmedia.com")
+        );
+      };
 
       if (!isValidToken) {
         isSuccess = false;
         errorMsg = `reCAPTCHA validation failed: token is invalid (${verificationResult.tokenProperties?.invalidReason || "unknown reason"}).`;
+      } else if (hostname && !isDomainAllowed(hostname)) {
+        isSuccess = false;
+        errorMsg = `reCAPTCHA validation failed: unauthorized domain origin (${hostname}).`;
       } else if (score !== undefined && score < 0.5) {
         isSuccess = false;
         errorMsg = `reCAPTCHA validation failed: verification score is too low (${score}).`;
@@ -122,9 +142,23 @@ export async function submitEnquiryAction(formDataPayload: {
         fullResponse: verificationResult,
       });
 
+      const hostname = verificationResult.hostname;
+      const isDomainAllowed = (host: string) => {
+        const cleanHost = host.trim().toLowerCase();
+        return (
+          cleanHost === "localhost" ||
+          cleanHost === "127.0.0.1" ||
+          cleanHost === "testkey.google.com" || // Google's official test keys
+          cleanHost.endsWith("kvtmedia.com")
+        );
+      };
+
       if (!verificationResult.success) {
         isSuccess = false;
         errorMsg = `reCAPTCHA validation failed: ${verificationResult["error-codes"]?.join(", ") || "invalid token"}. Please try again.`;
+      } else if (hostname && !isDomainAllowed(hostname)) {
+        isSuccess = false;
+        errorMsg = `reCAPTCHA validation failed: unauthorized domain origin (${hostname}).`;
       } else if (verificationResult.score !== undefined && verificationResult.score < 0.5) {
         isSuccess = false;
         errorMsg = "reCAPTCHA validation failed: verification score is too low. Please try again.";
@@ -134,10 +168,10 @@ export async function submitEnquiryAction(formDataPayload: {
     }
 
     if (!isSuccess) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         error: errorMsg,
-        details: verificationResult 
+        details: verificationResult
       };
     }
 
@@ -151,7 +185,7 @@ export async function submitEnquiryAction(formDataPayload: {
       location,
       city,
       message,
-      source: "homepage",
+      source: source || "homepage",
     };
 
     console.log("Submitting lead to backend database API:", `${backendUrl}/api/leads`);

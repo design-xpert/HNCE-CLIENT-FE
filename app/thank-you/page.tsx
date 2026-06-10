@@ -60,7 +60,7 @@ function getContent(type: ThankYouType, name: string | null) {
             desc: "Applications for 2025–26 are open. Limited seats available.",
           },
         ],
-        primaryCta: { label: "Explore Programs", href: "/programs" },
+        primaryCta: { label: "Explore Programs", href: "/en/programs" },
         secondaryCta: { label: "Apply Now", href: "/admissions" },
       };
 
@@ -93,7 +93,7 @@ function getContent(type: ThankYouType, name: string | null) {
           },
         ],
         primaryCta: { label: "Go to Home", href: "/" },
-        secondaryCta: { label: "View Programs", href: "/programs" },
+        secondaryCta: { label: "View Programs", href: "/en/programs" },
       };
 
     case "contact":
@@ -125,7 +125,7 @@ function getContent(type: ThankYouType, name: string | null) {
           },
         ],
         primaryCta: { label: "Go to Home", href: "/" },
-        secondaryCta: { label: "Explore Programs", href: "/programs" },
+        secondaryCta: { label: "Explore Programs", href: "/en/programs" },
       };
 
     default:
@@ -157,7 +157,7 @@ function getContent(type: ThankYouType, name: string | null) {
           },
         ],
         primaryCta: { label: "Go to Home", href: "/" },
-        secondaryCta: { label: "Explore Programs", href: "/programs" },
+        secondaryCta: { label: "Explore Programs", href: "/en/programs" },
       };
   }
 }

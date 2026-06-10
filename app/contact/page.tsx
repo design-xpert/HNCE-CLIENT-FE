@@ -409,7 +409,7 @@ export default function ContactPage() {
                 className="gap-2 border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
                 asChild
               >
-                <Link href="/programs">Explore Programs</Link>
+                <Link href="/en/programs">Explore Programs</Link>
               </Button>
             </div>
           </div>

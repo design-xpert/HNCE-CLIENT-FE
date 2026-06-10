@@ -80,7 +80,7 @@ export function SiteFooter() {
               <ul className="mt-4 space-y-2 text-sm">
                 {[
                   { label: "About Us", href: "/about" },
-                  { label: "Programs", href: "/programs" },
+                  { label: "Programs", href: "/en/programs" },
                   { label: "Admissions", href: "/admissions" },
                   { label: "Careers", href: "/careers" },
                   { label: "News & Updates", href: "/news" },

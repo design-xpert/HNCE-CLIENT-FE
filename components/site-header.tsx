@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { label: "Programs", href: "/programs", hasDropdown: true },
+  { label: "Programs", href: "/en/programs", hasDropdown: true },
   { label: "About", href: "/about" },
   { label: "Facilities", href: "/facilities" },
   { label: "Faculty", href: "/faculty" },
@@ -28,7 +28,17 @@ const navItems = [
   { label: "News", href: "/news" },
 ];
 
-const programs = [
+export interface HeaderProgram {
+  icon: any;
+  title: string;
+  duration: string;
+  fee: string;
+  intake: string;
+  slug: string;
+  highlights: string[];
+}
+
+const programs: HeaderProgram[] = [
   {
     icon: GraduationCap,
     title: "B.Sc. Nursing",
@@ -54,10 +64,60 @@ export function SiteHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [programsDropdownOpen, setProgramsDropdownOpen] = useState(false);
   const [mobileProgramsOpen, setMobileProgramsOpen] = useState(false);
+  const [dbPrograms, setDbPrograms] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL ;
+        const res = await fetch(`${apiUrl}/api/programs/public`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.programs) {
+            setDbPrograms(data.programs);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch programs for header:", err);
+      }
+    };
+    fetchPrograms();
+  }, []);
+
+  const getIcon = (slug: string) => {
+    return slug === "gnm" || slug === "gnm-diploma" ? BookOpen : GraduationCap;
+  };
+
+  const headerPrograms: HeaderProgram[] = dbPrograms.length > 0
+    ? dbPrograms
+        .filter((p: any) => p.showOnMenu)
+        .map((p: any) => {
+          const isGnm = p.slug === "gnm" || p.slug === "gnm-diploma";
+          const staticMatch = programs.find(
+            (sp) => (isGnm && sp.title.toLowerCase().includes("gnm")) || (!isGnm && sp.title.toLowerCase().includes("b.sc"))
+          );
+          return {
+            icon: staticMatch?.icon || getIcon(p.slug),
+            title: p.name || "",
+            duration: p.duration || "",
+            fee: p.annualFee
+              ? `₹${p.annualFee >= 100000 ? `${(p.annualFee / 100000).toFixed(1)}L` : `${p.annualFee / 1000}K`}/year`
+              : "",
+            intake: p.totalSeats ? `${p.totalSeats} Students` : "",
+            slug: p.slug === "gnm-diploma" ? "gnm" : p.slug,
+            highlights: p.highlights && p.highlights.length > 0 ? p.highlights : (staticMatch?.highlights || []),
+          };
+        })
+    : programs;
 
   const isActive = (href: string) => {
-    if (href === "/programs") {
-      return pathname === "/programs" || pathname.startsWith("/programs/");
+    if (href === "/en/programs") {
+      return (
+        pathname === "/en/programs" ||
+        pathname.startsWith("/en/programs/") ||
+        pathname === "/programs" ||
+        pathname.startsWith("/programs/")
+      );
     }
     if (href === "/news") {
       return pathname === "/news" || pathname.startsWith("/news/");
@@ -130,10 +190,10 @@ export function SiteHeader() {
 
                     {/* Two Course Cards - Side by Side */}
                     <div className="grid grid-cols-2 gap-4">
-                      {programs.map((program, i) => (
+                      {headerPrograms.map((program, i) => (
                         <Link
                           key={i}
-                          href={`/programs/${program.slug}`}
+                          href={`/en/programs/${program.slug}`}
                           className="group relative overflow-hidden rounded-xl border-2 border-border p-5 transition-all duration-200 hover:border-primary/50 hover:shadow-lg"
                         >
                           {/* Icon & Title */}
@@ -186,7 +246,7 @@ export function SiteHeader() {
                     {/* Footer CTA */}
                     <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
                       <Link
-                        href="/programs"
+                        href="/en/programs"
                         className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         View all program details
@@ -275,10 +335,10 @@ export function SiteHeader() {
                       }`}
                     >
                       <div className="py-2 pl-4 space-y-2">
-                        {programs.map((program, i) => (
+                        {headerPrograms.map((program, i) => (
                           <Link
                             key={i}
-                            href={`/programs/${program.slug}`}
+                            href={`/en/programs/${program.slug}`}
                             onClick={() => setMobileMenuOpen(false)}
                             className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-muted/50 transition-all"
                           >
@@ -297,7 +357,7 @@ export function SiteHeader() {
                           </Link>
                         ))}
                         <Link
-                          href="/programs"
+                          href="/en/programs"
                           onClick={() => setMobileMenuOpen(false)}
                           className="block text-center text-sm text-primary py-2 hover:underline"
                         >

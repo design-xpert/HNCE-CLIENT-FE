@@ -86,7 +86,22 @@ const heroSlides = [
   },
 ];
 
-const homeStaticPrograms = [
+export interface HomeProgram {
+  icon: any;
+  title: string;
+  duration: string;
+  eligibility: string;
+  fee: string;
+  highlights: string[];
+  featured?: boolean;
+  iconBg: string;
+  iconColor: string;
+  badgeClass: string;
+  feeColor: string;
+  slug: string;
+}
+
+const homeStaticPrograms: HomeProgram[] = [
   {
     icon: GraduationCap,
     title: "B.Sc. Nursing",
@@ -103,6 +118,7 @@ const homeStaticPrograms = [
     iconColor: "text-primary",
     badgeClass: "bg-primary/10 text-primary",
     feeColor: "text-primary",
+    slug: "bsc-nursing",
   },
   {
     icon: BookOpen,
@@ -116,6 +132,7 @@ const homeStaticPrograms = [
     iconColor: "text-terracotta-700",
     badgeClass: "bg-terracotta-100 text-terracotta-700",
     feeColor: "text-terracotta-700",
+    slug: "gnm",
   },
 ];
 
@@ -152,6 +169,30 @@ interface HomeClientProps {
 
 export default function HomeClient({ programs }: HomeClientProps) {
   const router = useRouter();
+  const displayPrograms: HomeProgram[] = programs && programs.length > 0
+    ? programs.map((apiProg: any) => {
+        const isGnm = apiProg.slug === "gnm" || apiProg.slug === "gnm-diploma";
+        const staticMatch = homeStaticPrograms.find(
+          (p) => (isGnm && p.title.toLowerCase().includes("gnm")) || (!isGnm && p.title.toLowerCase().includes("b.sc"))
+        );
+        return {
+          icon: staticMatch?.icon || (isGnm ? BookOpen : GraduationCap),
+          title: apiProg.name || "",
+          duration: apiProg.duration || "",
+          eligibility: apiProg.eligibility || "",
+          fee: apiProg.annualFee
+            ? `₹${apiProg.annualFee >= 100000 ? `${(apiProg.annualFee / 100000).toFixed(1)}L` : `${apiProg.annualFee / 1000}K`}/year`
+            : "",
+          highlights: apiProg.highlights && apiProg.highlights.length > 0 ? apiProg.highlights : (staticMatch?.highlights || []),
+          iconBg: staticMatch?.iconBg || (isGnm ? "bg-terracotta-100" : "bg-primary/10"),
+          iconColor: staticMatch?.iconColor || (isGnm ? "text-terracotta-700" : "text-primary"),
+          badgeClass: staticMatch?.badgeClass || (isGnm ? "bg-terracotta-100 text-terracotta-700" : "bg-primary/10 text-primary"),
+          feeColor: staticMatch?.feeColor || (isGnm ? "text-terracotta-700" : "text-primary"),
+          slug: apiProg.slug === "gnm-diploma" ? "gnm" : apiProg.slug,
+        };
+      })
+    : homeStaticPrograms;
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const recaptchaRef = useRef<ReCAPTCHARef>(null);
@@ -287,8 +328,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
                   <div
                     key={index}
                     className={`transition-all duration-700 ${index === currentSlide
-                        ? "translate-y-0 opacity-100"
-                        : "pointer-events-none absolute translate-y-8 opacity-0"
+                      ? "translate-y-0 opacity-100"
+                      : "pointer-events-none absolute translate-y-8 opacity-0"
                       }`}
                   >
                     {index === currentSlide && (
@@ -371,8 +412,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`h-2 rounded-full transition-all ${index === currentSlide
-                      ? "w-8 bg-primary"
-                      : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    ? "w-8 bg-primary"
+                    : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                     }`}
                 />
               ))}
@@ -439,7 +480,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
 
             {/* Two Course Cards - Equal Width */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-              {homeStaticPrograms.map((program, i) => (
+              {displayPrograms.map((program, i) => (
                 <Card
                   key={i}
                   className="relative overflow-hidden border-2 border-transparent hover:border-primary/20 hover:shadow-xl transition-all duration-300"
@@ -496,7 +537,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
                       </Button>
                       <Button variant="outline" asChild>
                         <Link
-                          href={`/programs/${i === 0 ? "bsc-nursing" : "gnm"}`}
+                          href={`/en/programs/${program.slug}`}
                         >
                           Learn More
                         </Link>
@@ -847,8 +888,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
                     key={index}
                     onClick={() => setCurrentTestimonial(index)}
                     className={`h-2 rounded-full transition-all ${index === currentTestimonial
-                        ? "w-6 bg-primary"
-                        : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                      ? "w-6 bg-primary"
+                      : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
                       }`}
                   />
                 ))}
@@ -1005,10 +1046,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
                     <div className="aspect-video overflow-hidden bg-muted">
                       <img
                         src={`https://images.unsplash.com/photo-${i === 0
-                            ? "1576091160399-112ba8d25d1d"
-                            : i === 1
-                              ? "1551190822-a9333d879b1f"
-                              : "1579684385127-1ef15d508118"
+                          ? "1576091160399-112ba8d25d1d"
+                          : i === 1
+                            ? "1551190822-a9333d879b1f"
+                            : "1579684385127-1ef15d508118"
                           }?w=600&q=80`}
                         alt={news.title}
                         className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -1225,10 +1266,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
                         value={formData.program}
                         onValueChange={(val) => setFormData({ ...formData, program: val })}
                       >
-                        <SelectTrigger id="lead-program">
+                        <SelectTrigger id="lead-program" className="w-full">
                           <SelectValue placeholder="Select a program" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="w-[var(--radix-select-trigger-width)]">
                           {programs.length > 0 ? (
                             programs.map((prog: any) => (
                               <SelectItem key={prog.id} value={prog.shortName || prog.name}>
@@ -1399,7 +1440,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
                 <ul className="mt-4 space-y-2 text-sm">
                   {[
                     { label: "About Us", href: "/about" },
-                    { label: "Programs", href: "/programs" },
+                    { label: "Programs", href: "/en/programs" },
                     { label: "Admissions", href: "/admissions" },
                     { label: "Placements", href: "#" },
                   ].map((item) => (
