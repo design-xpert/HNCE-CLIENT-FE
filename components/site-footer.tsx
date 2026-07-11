@@ -14,7 +14,7 @@ import {
 export function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-primary text-primary-foreground">
-      <BrandPattern />
+      <BrandPattern className="opacity-30" />
       {/* CTA Section */}
       <div className="border-b border-primary-foreground/20 px-6 py-12 lg:px-8">
         <div className="mx-auto max-w-7xl">

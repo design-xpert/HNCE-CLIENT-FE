@@ -206,7 +206,6 @@ export function ProspectusDialog({
                   <SelectItem value="gnm">
                     GNM — General Nursing & Midwifery
                   </SelectItem>
-                  <SelectItem value="all">All Programs</SelectItem>
                 </SelectContent>
               </Select>
             </div>

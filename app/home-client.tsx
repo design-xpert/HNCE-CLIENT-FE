@@ -419,7 +419,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
               ))}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mr-16 sm:mr-20 lg:mr-24">
               <Button
                 variant="outline"
                 size="icon"
@@ -725,7 +725,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
         </section>
 
         {/* Faculty Section */}
-        <section
+        {/* <section
           id="faculty"
           className="bg-muted/50 px-6 py-20 lg:px-8 lg:py-28"
         >
@@ -804,19 +804,18 @@ export default function HomeClient({ programs }: HomeClientProps) {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
-        {/* Accreditation Strip */}
-        <section className="border-y border-border bg-background px-6 py-12 lg:px-8">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-12 opacity-60">
+        <section className="border-y border-border bg-background px-6 py-8 md:py-12 lg:px-8">
+          <div className="mx-auto grid grid-cols-2 gap-x-4 gap-y-6 md:flex md:flex-wrap md:items-center md:justify-center md:gap-12 opacity-60">
             {[
               "INC Approved",
               "State University Affiliated",
               "NABH Accredited",
               "ISO 9001:2015",
             ].map((accred, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm">
-                <Award className="h-5 w-5" />
+              <div key={i} className="flex items-center justify-center gap-2 text-sm">
+                <Award className="h-5 w-5 shrink-0" />
                 <span>{accred}</span>
               </div>
             ))}
@@ -824,7 +823,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
         </section>
 
         {/* Testimonials */}
-        <section className="px-6 py-20 lg:px-8 lg:py-28">
+        {/* <section className="px-6 py-20 lg:px-8 lg:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="text-center">
               <SectionBadge>Testimonials</SectionBadge>
@@ -896,12 +895,12 @@ export default function HomeClient({ programs }: HomeClientProps) {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Admission Timeline */}
         <section
           id="admissions"
-          className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-20 lg:px-8 lg:py-28"
+          className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-12 lg:px-8 lg:py-16"
         >
           <BrandPattern />
           <div
@@ -936,7 +935,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
               </p>
             </div>
 
-            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   step: 1,
@@ -984,7 +983,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
               ))}
             </div>
 
-            <div className="mt-16 flex flex-col items-center justify-center gap-6 sm:flex-row">
+            <div className="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
               <Button size="lg" variant="secondary" className="gap-2">
                 Start Application <ArrowRight className="h-4 w-4" />
               </Button>
@@ -1081,7 +1080,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
           <div className="mx-auto max-w-3xl">
             <div className="text-center">
               <SectionBadge>FAQ</SectionBadge>
-              <h2 className="font-serif text-3xl font-light lg:text-4xl">
+              <h2 className="font-serif text-4xl font-light lg:text-4xl">
                 Frequently Asked Questions
               </h2>
             </div>
@@ -1110,10 +1109,10 @@ export default function HomeClient({ programs }: HomeClientProps) {
                 },
               ].map((faq, i) => (
                 <AccordionItem key={i} value={`item-${i}`}>
-                  <AccordionTrigger className="text-left">
+                  <AccordionTrigger className="text-left text-lg md:text-xl font-medium">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">
+                  <AccordionContent className="text-muted-foreground text-base md:text-lg leading-relaxed">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -1121,8 +1120,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
             </Accordion>
 
             <div className="mt-10 text-center">
-              <p className="text-muted-foreground">Have more questions?</p>
-              <Button variant="link" className="text-primary">
+              <p className="text-muted-foreground text-base md:text-lg">Have more questions?</p>
+              <Button variant="link" className="text-primary text-base md:text-lg">
                 Contact our admissions team{" "}
                 <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
@@ -1403,9 +1402,8 @@ export default function HomeClient({ programs }: HomeClientProps) {
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-16 lg:px-8">
-          <BrandPattern />
+          <BrandPattern className="opacity-30" />
           <div
             className="pointer-events-none absolute -right-16 -top-16 opacity-[0.07]"
             aria-hidden="true"
@@ -1417,11 +1415,15 @@ export default function HomeClient({ programs }: HomeClientProps) {
             />
           </div>
           <div className="relative mx-auto max-w-7xl">
-            <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-              <div>
+            <div className="grid grid-cols-2 gap-10 lg:grid-cols-4">
+              <div className="col-span-2 lg:col-span-1">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-foreground text-primary font-serif text-lg font-bold">
-                    H
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-foreground p-1">
+                    <img
+                      src="/images/logo-primary.png"
+                      alt="HCNE"
+                      className="h-full w-full object-contain"
+                    />
                   </div>
                   <div>
                     <p className="font-serif text-lg">HCNE</p>
@@ -1476,7 +1478,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
                 </ul>
               </div>
 
-              <div>
+              <div className="col-span-2 lg:col-span-1">
                 <h4 className="font-medium">Contact</h4>
                 <ul className="mt-4 space-y-3 text-sm text-primary-foreground/70">
                   <li className="flex items-start gap-2">

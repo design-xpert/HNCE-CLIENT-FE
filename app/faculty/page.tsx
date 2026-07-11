@@ -180,6 +180,13 @@ export default function FacultyPage() {
                   the next generation of nursing professionals through expert
                   teaching and mentorship.
                 </p>
+
+                {/* Dean's Quote Inline */}
+                <div className="mt-8 border-l-2 border-primary-foreground/30 pl-4 italic text-sm opacity-90 bg-primary-foreground/5 p-4 rounded-r-lg max-w-xl">
+                  &quot;Our faculty represents the pinnacle of academic excellence and clinical expertise. They are mentors, researchers, and advocates for the nursing profession.&quot;
+                  <span className="block mt-2 font-semibold not-italic text-xs text-primary-foreground/80">— Dr. Priya Verma, Dean of Nursing</span>
+                </div>
+
                 <div className="mt-8 flex flex-wrap gap-4">
                   <Button
                     size="lg"
@@ -194,35 +201,23 @@ export default function FacultyPage() {
                 </div>
               </div>
 
-              {/* Dean's Message Card */}
-              <Card className="overflow-hidden bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground">
-                <CardContent className="p-8">
-                  <div className="flex gap-6 items-start">
-                    <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-primary-foreground/30 shrink-0">
-                      <Image
-                        src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=200&h=200&fit=crop"
-                        alt="Dean of Nursing"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <BrandStar
-                        size={24}
-                        className="text-primary-foreground opacity-50 mb-3"
-                      />
-                      <blockquote className="text-sm italic opacity-90 leading-relaxed mb-3">
-                        &quot;Our faculty represents the pinnacle of academic
-                        excellence and clinical expertise. They are mentors,
-                        researchers, and advocates for the nursing
-                        profession.&quot;
-                      </blockquote>
-                      <p className="text-sm font-medium">Dr. Priya Verma</p>
-                      <p className="text-xs opacity-70">Dean of Nursing</p>
-                    </div>
+              {/* Dean's Featured Photo Card */}
+              <div className="relative hidden lg:block">
+                <div className="relative h-[450px] rounded-2xl overflow-hidden border border-primary-foreground/20 shadow-2xl">
+                  <Image
+                    src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800&h=600&fit=crop"
+                    alt="Dr. Priya Verma - Dean of Nursing"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <h3 className="font-serif text-xl font-semibold mb-1">Dr. Priya Verma</h3>
+                    <p className="text-xs uppercase tracking-wider text-white/70">Dean of Nursing, HCNE</p>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           </div>
         </section>

@@ -276,7 +276,7 @@ export default function AdmissionsPage() {
             <BrandStar size={200} className="text-primary-foreground" />
           </div>
 
-          <div className="relative mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+          <div className="relative mx-auto max-w-7xl px-6 py-12 lg:px-8 lg:py-16">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <div>
                 <Badge
@@ -285,9 +285,8 @@ export default function AdmissionsPage() {
                 >
                   Admissions Open 2025-26
                 </Badge>
-                <h1 className="font-serif text-4xl font-light leading-tight lg:text-5xl xl:text-6xl text-balance">
-                  Begin Your Journey in
-                  <span className="block">Healthcare Excellence</span>
+                <h1 className="font-serif text-4xl font-light leading-tight lg:text-5xl xl:text-6xl">
+                  Begin Your Journey in Healthcare Excellence
                 </h1>
                 <p className="mt-6 text-lg opacity-80 leading-relaxed max-w-xl">
                   Join thousands of healthcare professionals who started their
@@ -319,7 +318,7 @@ export default function AdmissionsPage() {
                 </div>
 
                 {/* Quick Stats */}
-                <div className="mt-10 grid grid-cols-3 gap-6">
+                <div className="mt-6 grid grid-cols-3 gap-6">
                   <div>
                     <div className="text-3xl font-bold">4</div>
                     <div className="text-sm opacity-70">Programs Offered</div>
@@ -337,7 +336,7 @@ export default function AdmissionsPage() {
 
               {/* Image */}
               <div className="relative hidden lg:block">
-                <div className="relative h-[500px] w-full rounded-2xl overflow-hidden">
+                <div className="relative h-[450px] w-full rounded-2xl overflow-hidden">
                   <Image
                     src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=500&fit=crop"
                     alt="Nursing students at HCNE"
@@ -370,7 +369,7 @@ export default function AdmissionsPage() {
         </section>
 
         {/* Admission Procedure Section */}
-        <section className="border-b border-border bg-muted/30 px-6 py-20 lg:px-8">
+        <section className="border-b border-border bg-muted/30 px-6 py-12 lg:px-8 lg:py-16">
           <div className="mx-auto max-w-7xl">
             <div className="mb-12 text-center">
               <SectionBadge>
@@ -475,7 +474,7 @@ export default function AdmissionsPage() {
         </section>
 
         {/* Eligibility Criteria Section */}
-        <section className="px-6 py-20 lg:px-8">
+        <section className="px-6 py-12 lg:px-8 lg:py-16">
           <div className="mx-auto max-w-7xl">
             <div className="mb-12 text-center">
               <SectionBadge>
@@ -631,7 +630,7 @@ export default function AdmissionsPage() {
         {/* Application Form Section */}
         <section
           id="apply"
-          className="relative bg-muted/30 px-6 py-20 lg:px-8 pb-32 lg:pb-20"
+          className="relative bg-muted/30 px-6 py-12 lg:px-8 pb-20 lg:pb-16"
         >
           <div className="absolute right-0 top-20 opacity-5">
             <BrandStar size={300} className="text-primary" />
@@ -1104,6 +1103,32 @@ export default function AdmissionsPage() {
                   </CardContent>
                 </Card>
 
+                {/* Fee Structure Quick View */}
+                <Card className="overflow-hidden">
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold mb-4 flex items-center gap-2">
+                      <IndianRupee className="h-5 w-5 text-primary" /> Fee
+                      Structure
+                    </h3>
+                    <div className="space-y-3 text-sm">
+                      {programEligibility.map((program) => (
+                        <div
+                          key={program.id}
+                          className="flex justify-between items-center pb-2 border-b border-border last:border-0 last:pb-0"
+                        >
+                          <span className="text-muted-foreground">
+                            {program.title}
+                          </span>
+                          <span className="font-medium">{program.fee}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-4">
+                      * Hostel and other charges are additional
+                    </p>
+                  </CardContent>
+                </Card>
+
                 {/* Important Dates */}
                 <Card className="overflow-hidden border-primary/20 bg-primary/5">
                   <CardContent className="p-6">
@@ -1135,39 +1160,13 @@ export default function AdmissionsPage() {
                     </div>
                   </CardContent>
                 </Card>
-
-                {/* Fee Structure Quick View */}
-                <Card className="overflow-hidden">
-                  <CardContent className="p-6">
-                    <h3 className="font-semibold mb-4 flex items-center gap-2">
-                      <IndianRupee className="h-5 w-5 text-primary" /> Fee
-                      Structure
-                    </h3>
-                    <div className="space-y-3 text-sm">
-                      {programEligibility.map((program) => (
-                        <div
-                          key={program.id}
-                          className="flex justify-between items-center pb-2 border-b border-border last:border-0 last:pb-0"
-                        >
-                          <span className="text-muted-foreground">
-                            {program.title}
-                          </span>
-                          <span className="font-medium">{program.fee}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-4">
-                      * Hostel and other charges are additional
-                    </p>
-                  </CardContent>
-                </Card>
               </div>
             </div>
           </div>
         </section>
 
         {/* FAQs Section */}
-        <section className="px-6 py-20 lg:px-8">
+        <section className="px-6 py-12 lg:px-8 lg:py-16">
           <div className="mx-auto max-w-4xl">
             <div className="mb-12 text-center">
               <SectionBadge>

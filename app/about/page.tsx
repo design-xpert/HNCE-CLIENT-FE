@@ -298,7 +298,7 @@ export default function AboutPage() {
               ].map((item, idx) => (
                 <Card
                   key={idx}
-                  className="overflow-hidden border-2 border-transparent transition-all hover:border-primary/20 hover:shadow-lg"
+                  className="overflow-hidden border border-border bg-card shadow-md transition-all duration-300 hover:border-primary/20 hover:shadow-xl"
                 >
                   <div className="h-2 bg-primary" />
                   <CardContent className="p-6">
@@ -314,13 +314,24 @@ export default function AboutPage() {
         </section>
 
         {/* Mission Vision Values */}
-        <section className="bg-muted px-6 py-20 lg:px-8 lg:py-28">
-          <div className="mx-auto max-w-7xl">
+        <section className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-20 lg:px-8 lg:py-28">
+          <BrandPattern className="opacity-[0.12]" />
+          <div className="absolute -left-16 -top-16 opacity-[0.07] pointer-events-none">
+            <BrandStar size={220} variant="outline" className="text-primary-foreground" />
+          </div>
+          <div className="absolute -right-16 -bottom-16 opacity-[0.07] pointer-events-none">
+            <BrandStar size={220} variant="outline" className="text-primary-foreground" />
+          </div>
+
+          <div className="relative mx-auto max-w-7xl z-10">
             <div className="mb-12 text-center">
-              <SectionBadge>
+              <SectionBadge
+                badgeClassName="bg-primary-foreground text-primary hover:bg-primary-foreground/95"
+                starClassName="text-primary-foreground/80"
+              >
                 Our Purpose
               </SectionBadge>
-              <h2 className="font-serif text-3xl font-light lg:text-4xl">
+              <h2 className="font-serif text-3xl font-light lg:text-4xl text-white">
                 Mission, Vision & Values
               </h2>
             </div>
@@ -346,13 +357,16 @@ export default function AboutPage() {
                     "Compassion in care, excellence in practice, innovation in learning, integrity in conduct, and commitment to community-centered healthcare.",
                 },
               ].map((item, idx) => (
-                <Card key={idx} className="overflow-hidden">
+                <Card
+                  key={idx}
+                  className="overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-2xl"
+                >
                   <CardContent className="p-8">
-                    <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-primary text-primary-foreground mb-6">
+                    <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 text-white mb-6">
                       <span className="text-xl font-bold">{item.letter}</span>
                     </div>
-                    <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <h3 className="text-xl font-semibold mb-3 text-white">{item.title}</h3>
+                    <p className="text-white/85 leading-relaxed text-sm">
                       {item.content}
                     </p>
                   </CardContent>
@@ -475,28 +489,46 @@ export default function AboutPage() {
               </h2>
             </div>
 
-            <div className="space-y-8 max-w-3xl">
-              {milestones.map((milestone, idx) => (
-                <div key={idx} className="flex gap-6">
-                  <div className="flex flex-col items-center">
-                    <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold text-sm">
-                      {milestone.year.slice(2)}
+            <div className="grid gap-12 lg:grid-cols-2 items-start">
+              {/* Left Column - Timeline */}
+              <div className="space-y-8 max-w-3xl">
+                {milestones.map((milestone, idx) => (
+                  <div key={idx} className="flex gap-6">
+                    <div className="flex flex-col items-center">
+                      <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold text-sm">
+                        {milestone.year.slice(2)}
+                      </div>
+                      {idx !== milestones.length - 1 && (
+                        <div className="h-16 w-1 bg-primary/20 mt-2" />
+                      )}
                     </div>
-                    {idx !== milestones.length - 1 && (
-                      <div className="h-16 w-1 bg-primary/20 mt-2" />
-                    )}
+                    <div className="pb-8">
+                      <p className="text-sm font-medium text-primary mb-1">
+                        {milestone.year}
+                      </p>
+                      <h3 className="text-lg font-semibold mb-1">
+                        {milestone.title}
+                      </h3>
+                      <p className="text-muted-foreground">{milestone.desc}</p>
+                    </div>
                   </div>
-                  <div className="pb-8">
-                    <p className="text-sm font-medium text-primary mb-1">
-                      {milestone.year}
-                    </p>
-                    <h3 className="text-lg font-semibold mb-1">
-                      {milestone.title}
-                    </h3>
-                    <p className="text-muted-foreground">{milestone.desc}</p>
-                  </div>
+                ))}
+              </div>
+
+              {/* Right Column - Image */}
+              <div className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden shadow-2xl sticky top-24 hidden lg:block bg-muted border border-border">
+                <Image
+                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&h=1000&fit=crop"
+                  alt="HCNE History & Milestones"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <p className="text-xs uppercase tracking-widest text-white/70 mb-1">Since 1989</p>
+                  <h4 className="font-serif text-lg font-medium">Over 35 Years of Educational Excellence</h4>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </section>

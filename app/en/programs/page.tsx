@@ -172,7 +172,7 @@ export default async function ProgramsPage() {
                   variant="secondary"
                   className="mb-6 bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/20"
                 >
-                  {mergedPrograms.length} Accredited {mergedPrograms.length === 1 ? "Program" : "Programs"}
+                  Accredited Programs
                 </Badge>
                 <h1 className="font-serif text-4xl font-light leading-tight lg:text-5xl xl:text-6xl text-balance">
                   Our Programs
@@ -237,7 +237,7 @@ export default async function ProgramsPage() {
         </section>
 
         {/* Quick Stats */}
-        <section className="border-b border-border bg-muted/30 px-6 py-12 lg:px-8">
+        <section className="border-b border-border bg-muted/30 px-6 py-6 md:py-8 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-6 md:grid-cols-4 text-center">
               {[
@@ -247,10 +247,10 @@ export default async function ProgramsPage() {
                 { number: "5000+", label: "Alumni Worldwide" },
               ].map((stat, idx) => (
                 <div key={idx} className="p-4">
-                  <div className="text-3xl font-bold text-primary mb-1">
+                  <div className="text-4xl font-bold text-primary mb-1 lg:text-3xl">
                     {stat.number}
                   </div>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <p className="text-base text-muted-foreground font-medium">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -370,19 +370,29 @@ export default async function ProgramsPage() {
           </div>
         </section>
 
-        {/* Why Study Nursing at HCNE */}
-        <section className="bg-muted px-6 py-20 lg:px-8 lg:py-28">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-12">
-              <SectionBadge>
+        <section className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-20 lg:px-8 lg:py-28">
+          <BrandPattern className="opacity-[0.12]" />
+          <div className="absolute -left-16 -top-16 opacity-[0.07] pointer-events-none">
+            <BrandStar size={220} variant="outline" className="text-primary-foreground" />
+          </div>
+          <div className="absolute -right-16 -bottom-16 opacity-[0.07] pointer-events-none">
+            <BrandStar size={220} variant="outline" className="text-primary-foreground" />
+          </div>
+
+          <div className="relative mx-auto max-w-7xl">
+            <div className="mb-12 relative z-10">
+              <SectionBadge
+                badgeClassName="bg-primary-foreground text-primary hover:bg-primary-foreground/95"
+                starClassName="text-primary-foreground/80"
+              >
                 Why HCNE
               </SectionBadge>
-              <h2 className="font-serif text-3xl font-light lg:text-4xl">
+              <h2 className="font-serif text-3xl font-light lg:text-4xl text-white">
                 Why Study Nursing at HCNE?
               </h2>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 relative z-10">
               {[
                 {
                   title: "World-Class Faculty",
@@ -403,21 +413,21 @@ export default async function ProgramsPage() {
               ].map((benefit, idx) => (
                 <Card
                   key={idx}
-                  className="overflow-hidden border-2 border-transparent transition-all hover:border-primary/20 hover:shadow-lg"
+                  className="overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-white/10 hover:border-white/20 hover:shadow-2xl"
                 >
                   <CardContent className="p-8">
                     <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
                         <BrandStar
                           size={24}
-                          className="text-primary opacity-60"
+                          className="text-white opacity-80"
                         />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold mb-2">
+                        <h3 className="text-lg font-semibold mb-2 text-white">
                           {benefit.title}
                         </h3>
-                        <p className="text-muted-foreground">{benefit.desc}</p>
+                        <p className="text-white/85 text-sm leading-relaxed">{benefit.desc}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -444,7 +454,7 @@ export default async function ProgramsPage() {
             </div>
 
             <div className="max-w-4xl mx-auto">
-              <div className="grid gap-3 md:grid-cols-2 mb-8">
+              <div className="grid gap-3 md:grid-cols-2">
                 {careerOps.map((career, idx) => (
                   <Card
                     key={idx}
@@ -458,7 +468,7 @@ export default async function ProgramsPage() {
                 ))}
               </div>
 
-              <Card className="overflow-hidden bg-primary/5 border-primary/20">
+              {/* <Card className="overflow-hidden bg-primary/5 border-primary/20">
                 <CardContent className="p-8 text-center">
                   <h3 className="text-xl font-semibold mb-2">
                     98%+ Placement Rate
@@ -472,13 +482,13 @@ export default async function ProgramsPage() {
                     Opportunities: 20%
                   </p>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-20 lg:px-8 lg:py-28">
+        <section className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-12 lg:px-8 lg:py-16">
           <BrandPattern className="opacity-[0.15]" />
           <div className="absolute top-10 right-10 opacity-10">
             <BrandStar size={150} className="text-primary-foreground" />

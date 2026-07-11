@@ -373,7 +373,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   loading="eager"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent" />
               </div>
             </div>
           </div>
@@ -474,7 +474,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
               <h2 className="font-serif text-3xl font-light lg:text-4xl mb-8">
                 Who Can Apply
               </h2>
-              <div className="grid lg:grid-cols-2 rounded-2xl overflow-hidden border border-border shadow-sm">
+              <div className="grid lg:grid-cols-2 rounded-2xl overflow-hidden shadow-sm">
                 {/* Left — primary panel */}
                 <div className="bg-primary text-primary-foreground p-8 lg:p-10">
                   <div className="flex items-center gap-3 mb-8">
@@ -535,7 +535,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
             </div>
 
             {/* Fees Section */}
-            {feeStructure && (
+            {/* {feeStructure && (
               <div>
                 <SectionBadge>
                   Fees Structure
@@ -620,7 +620,7 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </CardContent>
                 </Card>
               </div>
-            )}
+            )} */}
 
             {/* What You'll Achieve + Admission Form */}
             <div className="grid gap-12 lg:grid-cols-2 items-start">
@@ -746,27 +746,94 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   Experienced Faculty Team
                 </h2>
                 <div className="grid gap-6 md:grid-cols-3">
-                  {faculty.map((member: any, idx: number) => (
-                    <Card key={idx} className="overflow-hidden text-center hover:shadow-lg transition-shadow duration-300">
-                      <div className="aspect-square bg-muted relative">
-                        <img
-                          src={`https://i.pravatar.cc/300?img=${member.img}`}
-                          alt={member.name}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-semibold">{member.name}</h3>
-                        <p className="text-sm text-primary">{member.role}</p>
-                        <p className="mt-2 text-xs text-muted-foreground">
-                          {member.exp} Experience
-                        </p>
-                        <Badge variant="secondary" className="mt-2">
-                          {member.specialty}
-                        </Badge>
-                      </div>
-                    </Card>
-                  ))}
+                  {faculty.map((member: any, idx: number) => {
+                    let designation = "Assistant Professor";
+                    let publications = "12+";
+                    let image = `https://i.pravatar.cc/300?img=${member.img}`;
+
+                    if (member.name.includes("Priya")) {
+                      designation = "Professor & HOD";
+                      publications = "45+";
+                      image = "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop";
+                    } else if (member.name.includes("Rajesh")) {
+                      designation = "Associate Professor";
+                      publications = "32+";
+                      image = "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop";
+                    } else if (member.name.includes("Anjali")) {
+                      designation = "Assistant Professor";
+                      publications = "18+";
+                      image = "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=300&h=300&fit=crop";
+                    } else if (member.name.includes("Sarah")) {
+                      designation = "Associate Professor";
+                      publications = "28+";
+                      image = "https://images.unsplash.com/photo-1651008376811-b90baee60c1f?w=300&h=300&fit=crop";
+                    } else if (member.name.includes("Amit")) {
+                      designation = "Assistant Professor";
+                      publications = "15+";
+                      image = "https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=300&h=300&fit=crop";
+                    } else if (member.name.includes("Preeti")) {
+                      designation = "Lecturer";
+                      publications = "8+";
+                      image = "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=300&h=300&fit=crop";
+                    }
+
+                    return (
+                      <Card key={idx} className="overflow-hidden border-2 border-transparent hover:border-primary/20 hover:shadow-xl transition-all duration-300 group">
+                        <div className="relative h-64 bg-gradient-to-br from-primary/10 to-primary/5 border-b border-border">
+                          <img
+                            src={image}
+                            alt={member.name}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent" />
+                          <div className="absolute bottom-4 left-4 right-4">
+                            <Badge
+                              variant="secondary"
+                              className="bg-primary text-primary-foreground"
+                            >
+                              {designation}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        <CardContent className="p-6 text-left">
+                          <h3 className="text-lg font-semibold mb-1">
+                            {member.name}
+                          </h3>
+                          <p className="text-sm text-primary font-medium mb-4">
+                            {member.specialty}
+                          </p>
+
+                          <div className="space-y-2 mb-4 text-sm text-muted-foreground">
+                            <p>
+                              <span className="font-medium text-foreground">
+                                Specialization:
+                              </span>{" "}
+                              {member.specialty}
+                            </p>
+                            <p>
+                              <span className="font-medium text-foreground">
+                                Experience:
+                              </span>{" "}
+                              {member.exp}
+                            </p>
+                            <p>
+                              <span className="font-medium text-foreground">
+                                Qualification:
+                              </span>{" "}
+                              {member.role}
+                            </p>
+                            <p>
+                              <span className="font-medium text-foreground">
+                                Publications:
+                              </span>{" "}
+                              {publications}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -817,44 +884,6 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                 </Accordion>
               </div>
             )}
-
-            {/* CTA Section */}
-            <Card className="bg-primary text-primary-foreground border-0 overflow-hidden relative">
-              <BrandPattern className="opacity-[0.15]" />
-              <div className="absolute top-10 right-10 opacity-10">
-                <BrandStar size={150} className="text-primary-foreground" />
-              </div>
-              <CardContent className="p-12 text-center relative">
-                <h3 className="font-serif text-3xl font-light mb-4">
-                  Ready to Start Your Nursing Journey?
-                </h3>
-                <p className="text-lg opacity-80 mb-8 max-w-2xl mx-auto">
-                  Join HCNE and become a skilled, compassionate nursing professional ready to make a difference in healthcare.
-                </p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="gap-2"
-                    asChild
-                  >
-                    <Link href="/admissions">
-                      <ArrowRight className="h-4 w-4" /> Apply for Admission
-                    </Link>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="gap-2 border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
-                    asChild
-                  >
-                    <Link href="/contact">
-                      <Phone className="h-4 w-4" /> Contact Us
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </section>
       </main>

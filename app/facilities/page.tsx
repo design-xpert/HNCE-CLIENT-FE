@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 
 export default function FacilitiesPage() {
-  const [activeSection, setActiveSection] = useState(0);
 
   const facilitySections = [
     {
@@ -187,8 +186,6 @@ export default function FacilitiesPage() {
     },
   ];
 
-  const currentFacility = facilitySections[activeSection];
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
@@ -275,9 +272,9 @@ export default function FacilitiesPage() {
         </section>
 
         {/* Quick Stats */}
-        <section className="border-b border-border bg-muted/30 px-6 py-12 lg:px-8">
+        <section className="border-b border-border bg-muted/30 px-6 py-8 lg:px-8 lg:py-12">
           <div className="mx-auto max-w-7xl">
-            <div className="grid gap-6 md:grid-cols-4 text-center">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 text-center">
               {[
                 { number: "50+", label: "Acres Campus" },
                 { number: "25+", label: "Modern Buildings" },
@@ -295,172 +292,69 @@ export default function FacilitiesPage() {
           </div>
         </section>
 
-        {/* Facility Navigation */}
-        <section className="border-b border-border bg-background px-6 py-4 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {facilitySections.map((section, idx) => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(idx)}
-                  className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                    activeSection === idx
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  }`}
-                >
-                  <section.icon className="h-4 w-4" />
-                  {section.title}
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Featured Facility Section */}
-        <section className="relative px-6 py-16 lg:px-8 lg:py-24">
-          <div className="absolute right-0 top-20 opacity-5">
-            <BrandStar size={300} className="text-primary" />
-          </div>
-
-          <div className="relative mx-auto max-w-7xl">
-            <div className="grid gap-12 lg:grid-cols-2 items-center">
-              {/* Image Side */}
-              <div className="relative">
-                <div className="relative h-[400px] lg:h-[500px] rounded-2xl overflow-hidden">
-                  <Image
-                    src={currentFacility.image}
-                    alt={currentFacility.title}
-                    fill
-                    className="object-cover transition-all duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent" />
-                </div>
-
-                {/* Navigation Arrows */}
-                <div className="absolute bottom-4 right-4 flex gap-2">
-                  <button
-                    onClick={() =>
-                      setActiveSection((prev) =>
-                        prev === 0 ? facilitySections.length - 1 : prev - 1,
-                      )
-                    }
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 shadow-lg hover:bg-background transition-colors"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() =>
-                      setActiveSection((prev) =>
-                        prev === facilitySections.length - 1 ? 0 : prev + 1,
-                      )
-                    }
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-background/90 shadow-lg hover:bg-background transition-colors"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
-
-                {/* Stats Overlay */}
-                <div className="absolute -bottom-6 left-6 right-6 lg:left-6 lg:right-auto">
-                  <div className="flex gap-4 bg-background p-4 rounded-xl shadow-xl">
-                    {currentFacility.stats.map((stat, idx) => (
-                      <div key={idx} className="text-center px-4">
-                        <div className="text-2xl font-bold text-primary">
-                          {stat.number}
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {stat.label}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Content Side */}
-              <div className="lg:pl-8">
-                <SectionBadge>
-                  <currentFacility.icon className="h-3 w-3 mr-1" />
-                  {currentFacility.subtitle}
-                </SectionBadge>
-                <h2 className="font-serif text-3xl font-light lg:text-4xl mb-4">
-                  {currentFacility.title}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-8">
-                  {currentFacility.description}
-                </p>
-
-                <div className="space-y-3">
-                  {currentFacility.highlights.map((highlight, idx) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-                      <span className="text-sm">{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Pagination Dots */}
-                <div className="flex gap-2 mt-8">
-                  {facilitySections.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveSection(idx)}
-                      className={`h-2 rounded-full transition-all ${
-                        activeSection === idx
-                          ? "w-8 bg-primary"
-                          : "w-2 bg-muted-foreground/30"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* All Facilities Grid */}
-        <section className="bg-muted px-6 py-20 lg:px-8 lg:py-28">
+        {/* Campus Facilities Grid */}
+        <section className="bg-muted px-6 py-16 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-7xl">
             <div className="mb-12 text-center">
               <SectionBadge>
-                Complete Overview
+                Campus Infrastructure
               </SectionBadge>
               <h2 className="font-serif text-3xl font-light lg:text-4xl">
-                All Facilities at a Glance
+                Our World-Class Facilities
               </h2>
+              <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
+                Explore the state-of-the-art facilities designed to support your learning journey and clinical training.
+              </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {facilitySections.map((facility, idx) => (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {facilitySections.map((facility) => (
                 <Card
                   key={facility.id}
-                  className={`overflow-hidden border-2 transition-all cursor-pointer group ${
-                    activeSection === idx
-                      ? "border-primary shadow-lg"
-                      : "border-transparent hover:border-primary/20"
-                  }`}
-                  onClick={() => setActiveSection(idx)}
+                  className="overflow-hidden border border-border bg-card shadow-md transition-all duration-300 hover:border-primary/20 hover:shadow-xl flex flex-col group"
                 >
-                  <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-56 overflow-hidden">
                     <Image
                       src={facility.image}
                       alt={facility.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent" />
                     <div className="absolute bottom-4 left-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg">
                         <facility.icon className="h-5 w-5" />
                       </div>
                     </div>
                   </div>
-                  <CardContent className="p-5">
-                    <h3 className="font-semibold mb-1">{facility.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2">
-                      {facility.description}
-                    </p>
+                  <CardContent className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <span className="text-xs font-semibold text-primary/80 uppercase tracking-wider block mb-1">
+                        {facility.subtitle}
+                      </span>
+                      <h3 className="font-serif text-xl font-semibold mb-3">{facility.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                        {facility.description}
+                      </p>
+
+                      <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-border">
+                        {facility.highlights.slice(0, 4).map((h, i) => (
+                          <div key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                            <span className="truncate">{h}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-2 mt-6 pt-4 border-t border-border text-center bg-muted/30 p-2.5 rounded-lg">
+                        {facility.stats.map((s, i) => (
+                          <div key={i} className="border-r last:border-r-0 border-border/50">
+                            <div className="text-sm font-bold text-primary">{s.number}</div>
+                            <div className="text-[9px] text-muted-foreground uppercase tracking-wider">{s.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -507,66 +401,40 @@ export default function FacilitiesPage() {
         </section>
 
         {/* Virtual Tour CTA */}
-        <section className="bg-muted px-6 py-20 lg:px-8 lg:py-28">
-          <div className="mx-auto max-w-7xl">
-            <Card className="overflow-hidden relative">
-              <BrandPattern className="opacity-[0.15]" />
-              <CardContent className="p-12 text-center relative">
-                <BrandStar
-                  size={64}
-                  className="text-primary opacity-30 mx-auto mb-4"
-                />
-                <h2 className="font-serif text-3xl font-light lg:text-4xl mb-4">
-                  Experience Our Campus
-                </h2>
-                <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Schedule a campus visit to explore our state-of-the-art
-                  facilities and experience the HCNE environment firsthand.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button size="lg" className="gap-2" asChild>
-                    <Link href="/contact">
-                      <ArrowRight className="h-4 w-4" /> Schedule Campus Visit
-                    </Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <Link href="/gallery">View Photo Gallery</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+        <section className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-20 lg:px-8 lg:py-24">
+          <BrandPattern className="opacity-[0.12]" />
+          <div className="absolute -left-16 -top-16 opacity-[0.07] pointer-events-none">
+            <BrandStar size={220} variant="outline" className="text-primary-foreground" />
           </div>
-        </section>
-
-        {/* CTA */}
-        <section className="relative overflow-hidden bg-primary text-primary-foreground px-6 py-20 lg:px-8 lg:py-28">
-          <BrandPattern className="opacity-[0.15]" />
-          <div className="absolute top-10 right-10 opacity-10">
-            <BrandStar size={150} className="text-primary-foreground" />
+          <div className="absolute -right-16 -bottom-16 opacity-[0.07] pointer-events-none">
+            <BrandStar size={220} variant="outline" className="text-primary-foreground" />
           </div>
 
-          <div className="relative mx-auto max-w-7xl text-center">
-            <h2 className="font-serif text-3xl font-light lg:text-4xl mb-6">
-              Experience World-Class Infrastructure
+          <div className="relative mx-auto max-w-4xl text-center z-10">
+            <BrandStar
+              size={48}
+              className="text-primary-foreground opacity-60 mx-auto mb-6"
+            />
+            <h2 className="font-serif text-3xl font-light lg:text-4xl mb-4 text-white">
+              Experience Our Campus Firsthand
             </h2>
-            <p className="text-lg opacity-80 mb-8 max-w-2xl mx-auto">
-              Study in an environment designed for excellence. Join HCNE today.
+            <p className="text-white/85 mb-8 max-w-2xl mx-auto text-base">
+              Schedule a campus visit to explore our state-of-the-art
+              facilities and experience the HCNE environment firsthand.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="secondary" className="gap-2" asChild>
-                <Link href="/admissions">
-                  <ArrowRight className="h-4 w-4" /> Apply Now
+                <Link href="/contact">
+                  <ArrowRight className="h-4 w-4" /> Schedule Campus Visit
                 </Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="gap-2 border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+                className="gap-2 border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"
                 asChild
               >
-                <Link href="/contact">
-                  <Phone className="h-4 w-4" /> Contact Us
-                </Link>
+                <Link href="/gallery">View Photo Gallery</Link>
               </Button>
             </div>
           </div>
