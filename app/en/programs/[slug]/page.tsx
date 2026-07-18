@@ -17,10 +17,8 @@ import { BrandStar, BrandPattern, SectionBadge } from "@/components/brand-elemen
 import {
   Download,
   ArrowRight,
-  CheckCircle2,
   Clock,
   Award,
-  BookOpen,
   GraduationCap,
   Phone,
   Mail,
@@ -510,26 +508,15 @@ export default async function ProgramDetailPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                {/* Right — light panel */}
-                <div className="bg-muted/40 p-8 lg:p-10">
-                  <div className="flex items-center gap-3 mb-8">
-                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <BookOpen className="h-4 w-4 text-primary" />
-                    </div>
-                    <h3 className="font-serif text-xl font-medium">
-                      Required Documents
-                    </h3>
-                  </div>
-                  <div className="space-y-5">
-                    {requiredDocs.map((doc: string, idx: number) => (
-                      <div key={idx} className="flex gap-3 items-start">
-                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span className="text-sm text-muted-foreground leading-relaxed">
-                          {doc}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                {/* Right — Image */}
+                <div className="relative min-h-[350px] lg:min-h-full w-full">
+                  <Image
+                    src={aboutImage}
+                    alt={`${name} training`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                 </div>
               </div>
             </div>

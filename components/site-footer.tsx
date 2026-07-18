@@ -16,7 +16,7 @@ export function SiteFooter() {
     <footer className="relative overflow-hidden bg-primary text-primary-foreground">
       <BrandPattern className="opacity-30" />
       {/* CTA Section */}
-      <div className="border-b border-primary-foreground/20 px-6 py-12 lg:px-8">
+      {/* <div className="border-b border-primary-foreground/20 px-6 py-12 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
@@ -46,7 +46,7 @@ export function SiteFooter() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Footer Content */}
       <div className="px-6 py-16 lg:px-8">
