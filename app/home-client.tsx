@@ -405,38 +405,19 @@ export default function HomeClient({ programs }: HomeClientProps) {
           </div>
 
           {/* Slider Controls */}
-          <div className="absolute bottom-8 left-6 right-6 flex items-center justify-between lg:left-12 lg:right-12">
-            <div className="flex items-center gap-3">
-              {heroSlides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`h-2 rounded-full transition-all ${index === currentSlide
+          <div className="absolute bottom-8 left-0 right-0 z-10 flex items-center justify-center gap-3">
+            {heroSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                aria-label={`Go to slide ${index + 1}`}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  index === currentSlide
                     ? "w-8 bg-primary"
-                    : "w-2 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                    }`}
-                />
-              ))}
-            </div>
-
-            <div className="flex items-center gap-2 mr-16 sm:mr-20 lg:mr-24">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={prevSlide}
-                className="h-10 w-10 rounded-full border-border/50 bg-background/80 backdrop-blur"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={nextSlide}
-                className="h-10 w-10 rounded-full border-border/50 bg-background/80 backdrop-blur"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
+                    : "w-2.5 bg-muted-foreground/40 hover:bg-muted-foreground/70"
+                }`}
+              />
+            ))}
           </div>
         </section>
 
@@ -550,8 +531,337 @@ export default function HomeClient({ programs }: HomeClientProps) {
           </div>
         </section>
 
+        {/* Core Tangible Promise Banner */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-primary/85 text-primary-foreground px-6 py-20 lg:px-8 lg:py-24">
+          <BrandPattern />
+          <div
+            className="pointer-events-none absolute -right-20 -top-20 opacity-10"
+            aria-hidden="true"
+          >
+            <BrandStar size={320} variant="outline" className="text-primary-foreground" />
+          </div>
+          <div className="relative mx-auto max-w-5xl text-center">
+            <SectionBadge
+              badgeClassName="bg-primary-foreground/10 text-primary-foreground border-primary-foreground/20 backdrop-blur"
+              starClassName="text-primary-foreground"
+            >
+              Core Promise
+            </SectionBadge>
+            <h2 className="mt-4 font-serif text-3xl font-light leading-tight sm:text-4xl lg:text-5xl text-balance">
+              Job-Ready, Globally Relevant, <br className="hidden sm:inline" />
+              <span className="font-semibold underline decoration-primary-foreground/30 underline-offset-8">
+                Clinically Confident
+              </span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-3xl text-lg lg:text-xl text-primary-foreground/90 leading-relaxed font-light">
+              &ldquo;Graduates who are job‑ready, globally relevant, and clinically confident due to immersive hospital integration, high standards of clinical training, and strong placement pathways.&rdquo;
+            </p>
+
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+              {[
+                {
+                  title: "Immersive Hospital Integration",
+                  desc: "Guaranteed in-house clinical exposure in real healthcare environments from early training.",
+                  icon: Stethoscope,
+                },
+                {
+                  title: "High Clinical Standards",
+                  desc: "Simulation lab mastery and continuous competency verification by expert medical faculty.",
+                  icon: Shield,
+                },
+                {
+                  title: "Strong Placement Pathways",
+                  desc: "Direct hiring access with Heritage Healthcare and active global employer networks.",
+                  icon: Award,
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-primary-foreground/15 bg-primary-foreground/5 p-6 backdrop-blur transition-all duration-300 hover:bg-primary-foreground/10"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-foreground/10 text-primary-foreground mb-4">
+                    <item.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-serif text-lg font-medium text-primary-foreground">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-primary-foreground/80 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Brand Story Section */}
+        <section id="brand-story" className="border-t border-primary/20 bg-background px-6 py-20 lg:px-8 lg:py-28 relative">
+          <div className="mx-auto max-w-5xl">
+            {/* Badge */}
+            <div className="text-center mb-10">
+              <SectionBadge>Brand Story</SectionBadge>
+              <h2 className="mt-4 font-serif text-3xl font-light sm:text-4xl lg:text-5xl leading-tight text-balance max-w-4xl mx-auto">
+                A cohesive narrative that encompasses the facts and feelings that are created by Heritage Centre for Nursing Excellence (HCNE)
+              </h2>
+            </div>
+
+            {/* Main Narrative Card */}
+            <div className="rounded-3xl border border-border bg-card p-8 lg:p-12 shadow-sm space-y-8">
+              {/* Highlight / Lead Paragraph */}
+              <div className="relative pl-6 border-l-4 border-primary">
+                <p className="text-lg lg:text-xl font-serif leading-relaxed text-foreground">
+                  Born inside Heritage hospital, Heritage Centre for Nursing Excellence exists to produce nurses who are ready to work from day one by pairing sustained ward practice with accredited, competency-based assessment.
+                </p>
+              </div>
+
+              {/* Story Paragraphs Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-border/60">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-primary font-medium text-sm">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    <span>Clinical Rigor & Validation</span>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+                    HCNE places students in supervised clinical rotations from early semesters and validates those skills through simulation-based competency checks and regular assessments.
+                  </p>
+
+                  <div className="flex items-center gap-2 text-primary font-medium text-sm pt-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    <span>Accredited Programs & Career Pathways</span>
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+                    Our accredited degree and diploma programmes are built for licensure and international hiring, and they are supported by a direct placement pipeline into Heritage Healthcare plus active employer partnerships.
+                  </p>
+                </div>
+
+                <div className="space-y-6 rounded-2xl bg-muted/30 p-6 border border-border/50">
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-primary">For Students & Parents</span>
+                    <p className="mt-2 text-sm lg:text-base font-medium text-foreground leading-relaxed">
+                      HCNE replaces uncertain promises with verifiable clinical experience and credentialed outcomes.
+                    </p>
+                  </div>
+
+                  <div className="border-t border-border/60 pt-4">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-terracotta-700">For Hospitals & Recruiters</span>
+                    <p className="mt-2 text-sm lg:text-base font-medium text-foreground leading-relaxed">
+                      HCNE is a trusted source of entry-level nurses who have already practiced under clinical supervision and passed standardized competency checks.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Who We Serve Section */}
+        <section id="who-we-serve" className="bg-muted/40 px-6 py-20 lg:px-8 lg:py-28">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center mb-16">
+              <SectionBadge>Target Audience</SectionBadge>
+              <h2 className="font-serif text-3xl font-light lg:text-4xl">
+                Who We Serve
+              </h2>
+              <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
+                Empowering students, healthcare professionals, and medical recruiters through specialized nursing pathways.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                {
+                  category: "Primary Audience",
+                  title: "10+2 Science School-Leavers",
+                  desc: "Students completing high school (Physics, Chemistry, Biology) eager to launch a high-impact, professional career in nursing and healthcare.",
+                  icon: GraduationCap,
+                  highlights: [
+                    "Direct 4-Year B.Sc Nursing pathway",
+                    "Foundation clinical hands-on practice",
+                    "Comprehensive career & placement support",
+                  ],
+                  badgeColor: "bg-primary/10 text-primary border-primary/20",
+                },
+                {
+                  category: "Secondary Audience",
+                  title: "Healthcare Staff & Career-Changers",
+                  desc: "Working healthcare personnel, GNM diploma holders, and career switchers seeking accredited qualifications and degree advancement.",
+                  icon: Users,
+                  highlights: [
+                    "Post-Basic degree progression options",
+                    "Skills verification & competency enhancement",
+                    "Recognized academic accreditation",
+                  ],
+                  badgeColor: "bg-terracotta-100 text-terracotta-700 border-terracotta-200",
+                },
+                {
+                  category: "Employers & Recruiters",
+                  title: "Hospitals & Healthcare Agencies",
+                  desc: "Premier hospital networks, clinics, and global recruitment agencies seeking reliably trained, clinically confident entry-level nurses.",
+                  icon: Building2,
+                  highlights: [
+                    "Direct campus recruitment pipeline",
+                    "Heritage Healthcare direct hiring pathways",
+                    "Hospital-ready clinical candidates",
+                  ],
+                  badgeColor: "bg-olive-100 text-olive-700 border-olive-200",
+                },
+              ].map((card, i) => (
+                <Card
+                  key={i}
+                  className="relative flex flex-col justify-between border-2 border-transparent hover:border-primary/20 hover:shadow-xl transition-all duration-300"
+                >
+                  <CardContent className="p-8 flex flex-col h-full justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                          <card.icon className="h-6 w-6" />
+                        </div>
+                        <Badge variant="outline" className={card.badgeColor}>
+                          {card.category}
+                        </Badge>
+                      </div>
+
+                      <h3 className="font-serif text-2xl font-normal leading-tight mb-3">
+                        {card.title}
+                      </h3>
+
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+                        {card.desc}
+                      </p>
+                    </div>
+
+                    <div className="border-t border-border pt-6">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                        Key Opportunities
+                      </p>
+                      <ul className="space-y-2.5">
+                        {card.highlights.map((h, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-foreground/90">
+                            <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Key Proof Points & Evidence Section */}
+        <section id="proof-points" className="px-6 py-20 lg:px-8 lg:py-28">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center mb-16">
+              <SectionBadge>Key Proof Points</SectionBadge>
+              <h2 className="font-serif text-3xl font-light lg:text-4xl">
+                Evidence of Excellence
+              </h2>
+              <p className="mt-3 max-w-2xl mx-auto text-muted-foreground">
+                Our institutional accreditations, clinical model, and verified career outcomes set the gold standard.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Proof Point 1 */}
+              <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-all duration-300">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-6">
+                  <Stethoscope className="h-6 w-6" />
+                </div>
+                <h3 className="font-serif text-xl font-normal mb-2">
+                  Guaranteed Hospital Immersion
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  In-house hospital immersion providing real clinical exposure, patient interaction, and bedside training throughout the curriculum.
+                </p>
+              </div>
+
+              {/* Proof Point 2 */}
+              <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-all duration-300">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-terracotta-100 text-terracotta-700 mb-6">
+                  <Shield className="h-6 w-6" />
+                </div>
+                <h3 className="font-serif text-xl font-normal mb-2">
+                  Recognized Accreditations
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                  Fully approved and affiliated with India&apos;s premier healthcare regulatory bodies:
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["INC (New Delhi)", "ABVMU Affiliated", "UPSMF Approved", "QCI Rated (Mission Nirmaya)"].map((acc, i) => (
+                    <Badge key={i} variant="secondary" className="text-xs bg-muted">
+                      {acc}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Proof Point 3 */}
+              <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-all duration-300">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-olive-100 text-olive-700 mb-6">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <h3 className="font-serif text-xl font-normal mb-2">
+                  High-Demand Programs
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  Structured academic offerings with controlled batch sizes for focused clinical mentorship:
+                </p>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-sm border-b border-border pb-1.5">
+                    <span className="font-medium">B.Sc. Nursing</span>
+                    <span className="text-muted-foreground">4 Yrs &bull; 80 Seats/Yr</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-medium">GNM Diploma</span>
+                    <span className="text-muted-foreground">3 Yrs &bull; 60 Seats/Yr</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Proof Point 4 */}
+              <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-all duration-300">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary mb-6">
+                  <CheckCircle2 className="h-6 w-6" />
+                </div>
+                <h3 className="font-serif text-xl font-normal mb-2">
+                  Rigorous Assessment Model
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Regular written evaluations, simulation-based competency checks, field visits, and ongoing professional conduct monitoring.
+                </p>
+              </div>
+
+              {/* Proof Point 5 */}
+              <div className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-all duration-300 md:col-span-2 lg:col-span-2">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-terracotta-100 text-terracotta-700 mb-6">
+                  <Award className="h-6 w-6" />
+                </div>
+                <h3 className="font-serif text-xl font-normal mb-2">
+                  Direct Career & Placement Pipeline
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  Formal placement framework and direct hiring pathways with Heritage Healthcare, backed by proactive employer outreach across premier national and international medical institutions.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-2">
+                  <span className="flex items-center gap-1 text-primary font-medium">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> Direct Heritage Hiring
+                  </span>
+                  <span className="flex items-center gap-1 text-primary font-medium">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> Hospital Placement Drives
+                  </span>
+                  <span className="flex items-center gap-1 text-primary font-medium">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> International Opportunities
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Why Choose HCNE */}
-        <section id="why" className="bg-muted/50 px-6 py-20 lg:px-8 lg:py-28">
+        {/* <section id="why" className="bg-muted/50 px-6 py-20 lg:px-8 lg:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
               <div>
@@ -628,98 +938,180 @@ export default function HomeClient({ programs }: HomeClientProps) {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
-        {/* Facilities Section */}
-        <section id="facilities" className="px-6 py-20 lg:px-8 lg:py-28">
+        {/* Prominent Facilities & World-Class Infrastructure Section */}
+        <section id="facilities" className="relative overflow-hidden bg-muted/30 px-6 py-24 lg:px-8 lg:py-32">
           <div className="mx-auto max-w-7xl">
-            <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-              <div>
-                <SectionBadge>Facilities</SectionBadge>
+            {/* Header */}
+            <div className="text-center mb-16">
+              <SectionBadge>World-Class Infrastructure</SectionBadge>
+              <h2 className="font-serif text-3xl font-light sm:text-4xl lg:text-5xl text-balance">
+                State-of-the-Art Campus & <br className="hidden sm:inline" />
+                <span className="font-semibold text-primary">Clinical Infrastructure</span>
+              </h2>
+              <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground leading-relaxed">
+                Spanning across a lush 15-acre campus, HCNE provides cutting-edge simulation laboratories, digital learning centers, and modern residential spaces designed for holistic nursing excellence.
+              </p>
+            </div>
 
-                <h2 className="font-serif text-3xl font-light lg:text-4xl">
-                  World-Class Infrastructure
-                </h2>
-                <p className="mt-4 text-muted-foreground leading-relaxed">
-                  Our 15-acre campus features modern facilities designed to
-                  provide the best learning environment for aspiring healthcare
-                  professionals.
-                </p>
+            {/* Quick Stats Bar */}
+            <div className="mb-16 grid grid-cols-2 md:grid-cols-4 gap-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
+              {[
+                { label: "Sprawling Campus", value: "15+ Acres", icon: MapPin },
+                { label: "Advanced Labs", value: "10+ Specialized", icon: Stethoscope },
+                { label: "Digital Library", value: "24/7 Access", icon: BookOpen },
+                { label: "AC Hostels & Wi-Fi", value: "100% Secure", icon: Building2 },
+              ].map((stat, i) => (
+                <div key={i} className="flex items-center gap-4 p-2 last:border-0 border-r-0 md:border-r border-border/60 md:last:border-r-0">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <stat.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold font-serif text-foreground">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-                <div className="mt-8 space-y-4">
-                  {[
-                    {
-                      title: "Simulation Center",
-                      desc: "High-fidelity mannequins replicating real patient scenarios",
-                      color: "text-primary",
-                      dot: "bg-primary/10",
-                    },
-                    {
-                      title: "Anatomy Lab",
-                      desc: "Fully equipped with models and digital resources",
-                      color: "text-terracotta-700",
-                      dot: "bg-terracotta-100",
-                    },
-                    {
-                      title: "Digital Library",
-                      desc: "24/7 access to journals, e-books, and research databases",
-                      color: "text-olive-700",
-                      dot: "bg-olive-100",
-                    },
-                    {
-                      title: "Hostel",
-                      desc: "Separate AC hostels for boys and girls with mess facility",
-                      color: "text-grey-700",
-                      dot: "bg-grey-100",
-                    },
-                    {
-                      title: "Sports Complex",
-                      desc: "Indoor and outdoor facilities for holistic development",
-                      color: "text-primary-500",
-                      dot: "bg-primary-100",
-                    },
-                  ].map((facility, i) => (
-                    <div
-                      key={i}
-                      className="flex items-start gap-3 rounded-lg border border-border p-4"
-                    >
-                      <CheckCircle2
-                        className={`mt-0.5 h-5 w-5 shrink-0 ${facility.color}`}
-                      />
-                      <div>
-                        <h4 className="font-medium">{facility.title}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {facility.desc}
-                        </p>
+            {/* Main Infrastructure Grid Showcase */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mb-16">
+              {/* Featured Large Card */}
+              <div className="lg:col-span-7 group relative overflow-hidden rounded-3xl border border-border bg-card shadow-lg transition-all duration-500 hover:shadow-2xl flex flex-col justify-end min-h-[420px] lg:min-h-[520px]">
+                <img
+                  src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80"
+                  alt="High-Fidelity Simulation Center"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                <div className="relative p-8 lg:p-10 text-white z-10">
+                  <Badge className="mb-4 bg-primary text-primary-foreground border-none px-3 py-1 text-xs">
+                    Flagship Facility
+                  </Badge>
+                  <h3 className="font-serif text-2xl lg:text-3xl font-medium text-white mb-3">
+                    High-Fidelity Simulation Center
+                  </h3>
+                  <p className="text-sm lg:text-base text-gray-200 leading-relaxed max-w-xl">
+                    Replicating real-world ICU, OT, and emergency ward scenarios with computerized high-fidelity mannequins for risk-free, hands-on clinical mastery.
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-medium text-white">
+                      Full ICU Setup
+                    </span>
+                    <span className="rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-medium text-white">
+                      Computerized Mannequins
+                    </span>
+                    <span className="rounded-full bg-white/20 backdrop-blur px-3 py-1 text-xs font-medium text-white">
+                      Live Video Debriefing
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Secondary Grid Cards */}
+              <div className="lg:col-span-5 grid grid-cols-1 gap-6">
+                <div className="group relative overflow-hidden rounded-3xl border border-border bg-card shadow-md transition-all duration-500 hover:shadow-xl flex flex-col justify-end min-h-[240px]">
+                  <img
+                    src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=800&q=80"
+                    alt="Digital Library & Research Hub"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                  <div className="relative p-6 text-white z-10">
+                    <Badge variant="secondary" className="mb-2 bg-white/20 backdrop-blur text-white border-none text-xs">
+                      24/7 E-Resource
+                    </Badge>
+                    <h4 className="font-serif text-xl font-medium text-white mb-1">
+                      Digital Library & Research Center
+                    </h4>
+                    <p className="text-xs text-gray-200">
+                      Thousands of international medical journals, e-books, and quiet study zones.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="group relative overflow-hidden rounded-3xl border border-border bg-card shadow-md transition-all duration-500 hover:shadow-xl flex flex-col justify-end min-h-[240px]">
+                  <img
+                    src="https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&q=80"
+                    alt="Modern Campus & Hostels"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                  <div className="relative p-6 text-white z-10">
+                    <Badge variant="secondary" className="mb-2 bg-white/20 backdrop-blur text-white border-none text-xs">
+                      Residential Life
+                    </Badge>
+                    <h4 className="font-serif text-xl font-medium text-white mb-1">
+                      Modern AC Hostels & Dining
+                    </h4>
+                    <p className="text-xs text-gray-200">
+                      Separate secure hostels with AC rooms, nutritious mess meals, and 24/7 security.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature List Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Anatomy & Pathology Labs",
+                  desc: "Equipped with 3D anatomical models, tissue specimens, and digital histology stations for comprehensive biological learning.",
+                  icon: Stethoscope,
+                  color: "bg-primary/10 text-primary",
+                },
+                {
+                  title: "Community Health Lab",
+                  desc: "Simulated rural & urban healthcare setup for public health training, field surveys, and family health studies.",
+                  icon: Users,
+                  color: "bg-terracotta-100 text-terracotta-700",
+                },
+                {
+                  title: "Nutrition & Dietetics Lab",
+                  desc: "Modern therapeutic kitchen setup where students learn patient dietary planning and clinical nutrition therapy.",
+                  icon: Shield,
+                  color: "bg-olive-100 text-olive-700",
+                },
+                {
+                  title: "Computer & Informatics Lab",
+                  desc: "High-speed workstation lab featuring Electronic Health Records (EHR) software training and hospital management systems.",
+                  icon: BookOpen,
+                  color: "bg-primary/10 text-primary",
+                },
+                {
+                  title: "Auditorium & Seminar Halls",
+                  desc: "State-of-the-art air-conditioned auditoriums equipped with smart AV systems for national conferences & workshops.",
+                  icon: Building2,
+                  color: "bg-terracotta-100 text-terracotta-700",
+                },
+                {
+                  title: "Sports & Recreation Complex",
+                  desc: "Extensive indoor and outdoor sports grounds including badminton, volleyball, table tennis, and gymnasium.",
+                  icon: Award,
+                  color: "bg-olive-100 text-olive-700",
+                },
+              ].map((item, idx) => (
+                <Card
+                  key={idx}
+                  className="border border-border/80 hover:border-primary/30 hover:shadow-lg transition-all duration-300"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${item.color}`}>
+                        <item.icon className="h-6 w-6" />
                       </div>
+                      <h4 className="font-serif text-lg font-medium leading-snug">
+                        {item.title}
+                      </h4>
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2 aspect-video overflow-hidden rounded-xl bg-muted">
-                  <img
-                    src="https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&q=80"
-                    alt="Simulation center"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="aspect-square overflow-hidden rounded-xl bg-muted">
-                  <img
-                    src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=400&q=80"
-                    alt="Library"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="aspect-square overflow-hidden rounded-xl bg-muted">
-                  <img
-                    src="https://images.unsplash.com/photo-1516549655169-df83a0774514?w=400&q=80"
-                    alt="Campus"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -1003,77 +1395,7 @@ export default function HomeClient({ programs }: HomeClientProps) {
         </section>
 
         {/* News/Announcements */}
-        <section className="px-6 py-20 lg:px-8 lg:py-28">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
-              <div>
-                <SectionBadge>News</SectionBadge>
-                <h2 className="font-serif text-3xl font-light lg:text-4xl">
-                  Latest Updates
-                </h2>
-              </div>
-              <Button variant="outline" className="gap-2" asChild>
-                <Link href="/news">
-                  All News <ChevronRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-
-            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  date: "May 15, 2025",
-                  title: "HCNE Ranked #3 Nursing College in South India",
-                  category: "Achievement",
-                  slug: "hcne-ranked-3-nursing-college-south-india",
-                },
-                {
-                  date: "May 10, 2025",
-                  title: "New Simulation Lab Inauguration by Health Minister",
-                  category: "Campus",
-                  slug: "new-simulation-lab-inauguration",
-                },
-                {
-                  date: "May 5, 2025",
-                  title: "100% Placement for 2024 Batch Completed",
-                  category: "Placements",
-                  slug: "100-percent-placement-2024-batch",
-                },
-              ].map((news, i) => (
-                <Card key={i} className="overflow-hidden group">
-                  <Link href={`/news/${news.slug}`} className="block">
-                    <div className="aspect-video overflow-hidden bg-muted">
-                      <img
-                        src={`https://images.unsplash.com/photo-${i === 0
-                          ? "1576091160399-112ba8d25d1d"
-                          : i === 1
-                            ? "1551190822-a9333d879b1f"
-                            : "1579684385127-1ef15d508118"
-                          }?w=600&q=80`}
-                        alt={news.title}
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="p-5">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Badge variant="secondary" className="text-xs">
-                          {news.category}
-                        </Badge>
-                        <span>{news.date}</span>
-                      </div>
-                      <h3 className="mt-3 font-semibold leading-snug group-hover:text-primary transition-colors">
-                        {news.title}
-                      </h3>
-                      <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                        Read More <ChevronRight className="h-3 w-3" />
-                      </span>
-                    </div>
-                  </Link>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+        
 
         {/* FAQ Section */}
         <section className="bg-muted/50 px-6 py-20 lg:px-8 lg:py-28">
